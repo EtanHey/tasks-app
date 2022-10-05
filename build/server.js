@@ -8,11 +8,11 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 require('dotenv').config();
 const uri = process.env.MONGODB_URI;
-const app = express_1.default();
+const app = (0, express_1.default)();
 const port = process.env.PORT || 3000;
 app.use(express_1.default.static('public'));
 app.use(express_1.default.json());
-app.use(cookie_parser_1.default());
+app.use((0, cookie_parser_1.default)());
 mongoose_1.default
     .connect(uri)
     .then(() => {
@@ -31,3 +31,4 @@ app.use('/tasks', taskRoutes_1.default);
 app.listen(port, () => {
     return console.log(`Server is listening at http://localhost:${port}`);
 });
+//# sourceMappingURL=server.js.map

@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,6 +35,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+exports.__esModule = true;
+var axios_1 = require("axios");
 function handleRegister(ev) {
     return __awaiter(this, void 0, void 0, function () {
         var registerStatus, _a, firstName, lastName, email, password, role, gender, data, aUser;
@@ -49,7 +52,7 @@ function handleRegister(ev) {
                     password = password.value;
                     role = role.value;
                     gender = gender.value;
-                    return [4 /*yield*/, axios.post('/users/add-user', {
+                    return [4 /*yield*/, axios_1["default"].post('/users/add-user', {
                             firstName: firstName,
                             lastName: lastName,
                             email: email,
@@ -87,7 +90,7 @@ function handleLogin(ev) {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, axios.post('/users/log-in', userData)];
+                    return [4 /*yield*/, axios_1["default"].post('/users/log-in', userData)];
                 case 2:
                     data = (_a.sent()).data;
                     ok = data.ok, aUser = data.aUser, userId = data.userId;
@@ -127,7 +130,7 @@ function handleRenderHome(ev) {
                     ev.preventDefault();
                     currentPage = ev.target.title;
                     userId = ev.target.location.search.replace(/.*?id=/g, '');
-                    return [4 /*yield*/, axios.get("users/logged-in-user?userId=" + userId)];
+                    return [4 /*yield*/, axios_1["default"].get("users/logged-in-user?userId=" + userId)];
                 case 1:
                     data = (_a.sent()).data;
                     userInfo = data.userInfo;
@@ -164,7 +167,7 @@ function handleGetUrgencies(userId) {
         var data, lowUrgency, mediumUrgency, highUrgency, arr;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, axios.get("tasks/get-urgencies?userId=" + userId)];
+                case 0: return [4 /*yield*/, axios_1["default"].get("tasks/get-urgencies?userId=" + userId)];
                 case 1:
                     data = (_a.sent()).data;
                     lowUrgency = data.lowUrgency, mediumUrgency = data.mediumUrgency, highUrgency = data.highUrgency;
@@ -183,7 +186,7 @@ function handleRenderRecentlyCreated(ev) {
                     ev.preventDefault();
                     currentPage = ev.target.title.split(' ').join('');
                     userId = ev.target.location.search.replace(/.*?id=/g, '');
-                    return [4 /*yield*/, axios.get("users/logged-in-user?userId=" + userId)];
+                    return [4 /*yield*/, axios_1["default"].get("users/logged-in-user?userId=" + userId)];
                 case 1:
                     data = (_a.sent()).data;
                     getUsersTasks(userId, currentPage);
@@ -202,7 +205,7 @@ function handleRenderSettings(ev) {
                     currentPage = ev.target.title;
                     userId = ev.target.location.search.replace(/.*?id=/g, '');
                     settingsForm = document.querySelector('[data-settings]');
-                    return [4 /*yield*/, axios.get("users/logged-in-user?userId=" + userId)];
+                    return [4 /*yield*/, axios_1["default"].get("users/logged-in-user?userId=" + userId)];
                 case 1:
                     data = (_a.sent()).data;
                     userInfo = data.userInfo;
@@ -235,7 +238,7 @@ function handleUserUpdate(ev) {
                     roleUpdate = (_e = ev.target.elements.roleUpdate) === null || _e === void 0 ? void 0 : _e.value;
                     passwordUpdate = (_f = ev.target.elements.passwordUpdate) === null || _f === void 0 ? void 0 : _f.value;
                     passwordConfirmation = (_g = ev.target.elements.passwordConfirmation) === null || _g === void 0 ? void 0 : _g.value;
-                    return [4 /*yield*/, axios.patch("/users/settings", {
+                    return [4 /*yield*/, axios_1["default"].patch("/users/settings", {
                             firstNameUpdate: firstNameUpdate,
                             lastNameUpdate: lastNameUpdate,
                             emailUpdate: emailUpdate,
@@ -273,7 +276,7 @@ function handlePasswordCheck(password, userId) {
         var data, isRightPassword;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, axios.post("/users/passwordCheck", {
+                case 0: return [4 /*yield*/, axios_1["default"].post("/users/passwordCheck", {
                         password: password,
                         userId: userId
                     })];
@@ -302,7 +305,7 @@ function handlePageChange(ev) {
                 case 1:
                     _a.trys.push([1, 10, , 11]);
                     if (!(requestedPage === 'home')) return [3 /*break*/, 3];
-                    return [4 /*yield*/, axios.post("/users/nav", {
+                    return [4 /*yield*/, axios_1["default"].post("/users/nav", {
                             userURL: userURL,
                             requestedPage: requestedPage
                         })];
@@ -313,7 +316,7 @@ function handlePageChange(ev) {
                     _a.label = 3;
                 case 3:
                     if (!(requestedPage === 'settings')) return [3 /*break*/, 5];
-                    return [4 /*yield*/, axios.post("/users/nav", {
+                    return [4 /*yield*/, axios_1["default"].post("/users/nav", {
                             userURL: userURL,
                             requestedPage: requestedPage
                         })];
@@ -324,7 +327,7 @@ function handlePageChange(ev) {
                     _a.label = 5;
                 case 5:
                     if (!(requestedPage === 'info')) return [3 /*break*/, 7];
-                    return [4 /*yield*/, axios.post("/users/nav", {
+                    return [4 /*yield*/, axios_1["default"].post("/users/nav", {
                             userURL: userURL,
                             requestedPage: requestedPage
                         })];
@@ -335,7 +338,7 @@ function handlePageChange(ev) {
                     _a.label = 7;
                 case 7:
                     if (!(requestedPage === 'RecentlyCreated')) return [3 /*break*/, 9];
-                    return [4 /*yield*/, axios.post("/users/nav", {
+                    return [4 /*yield*/, axios_1["default"].post("/users/nav", {
                             userURL: userURL,
                             requestedPage: requestedPage
                         })];
@@ -362,7 +365,7 @@ function getUsersTasks(userId, currentPage) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, axios.get("tasks/getTasks?ownerId=" + userId)];
+                    return [4 /*yield*/, axios_1["default"].get("tasks/getTasks?ownerId=" + userId)];
                 case 1:
                     data = (_a.sent()).data;
                     currentUsersTasks = data;
@@ -496,7 +499,7 @@ function handleNewTask(ev) {
                     userId = ev.target.baseURI.slice(-24);
                     _a = ev.target.elements, color = _a.color, title = _a.title, description = _a.description, urgency = _a.urgency, location = _a.location, date = _a.date;
                     (color = color.value), (title = title.value), (description = description.value), (urgency = urgency.value), (location = location.value), (date = date.value);
-                    return [4 /*yield*/, axios
+                    return [4 /*yield*/, axios_1["default"]
                             .post('/tasks/add-new-task', {
                             color: color,
                             title: title,
@@ -535,7 +538,7 @@ function handleTaskUpdate(ev) {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, axios.patch('/tasks/updated-task', {
+                    return [4 /*yield*/, axios_1["default"].patch('/tasks/updated-task', {
                             _id: taskId,
                             ownerId: userId,
                             color: color,
@@ -571,7 +574,7 @@ function handleTaskCheck(ev) {
                     timeChecked = new Date().toLocaleDateString().replace(/\//g, '-');
                     taskId = ev.target.dataset.check;
                     userId = ev.target.baseURI.slice(-24);
-                    return [4 /*yield*/, axios.patch('/tasks/check-task', {
+                    return [4 /*yield*/, axios_1["default"].patch('/tasks/check-task', {
                             _id: taskId,
                             ownerId: userId,
                             timeChecked: timeChecked
@@ -602,7 +605,7 @@ function handleTaskDelete(ev) {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, axios["delete"]('/tasks/delete-task', {
+                    return [4 /*yield*/, axios_1["default"]["delete"]('/tasks/delete-task', {
                             data: { taskId: taskId, userURL: userURL }
                         })];
                 case 2:
@@ -662,7 +665,7 @@ function renderTaskModal(ev) {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, axios.post('/tasks/task', { taskId: taskId })];
+                    return [4 /*yield*/, axios_1["default"].post('/tasks/task', { taskId: taskId })];
                 case 2:
                     data = (_a.sent()).data;
                     currentTask = data;

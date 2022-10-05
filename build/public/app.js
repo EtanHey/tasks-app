@@ -1,19 +1,20 @@
+"use strict";
 /* this is meant to seperate each letter in a fancy class */
-var text = document.querySelector(".fancy");
-var strText = text.textContent;
-var splitText = strText.split("");
+const text = document.querySelector(".fancy");
+const strText = text.textContent;
+const splitText = strText.split("");
 text.textContent = "";
-splitText.forEach(function (i) {
-    text.innerHTML += '<span>' + ("" + i) + '</span>';
+splitText.forEach(i => {
+    text.innerHTML += '<span>' + `${i}` + '</span>';
 });
 // for (i = 0; i < splitText.length; i++) {
 //   text.innerHTML += "<span>" + splitText[i] + "</span>";
 // }
 /* this is the animation part */
-var char = 0;
-var timer = setInterval(onTick, 120);
+let char = 0;
+let timer = setInterval(onTick, 120);
 function onTick() {
-    var span = text.querySelectorAll("span")[char];
+    const span = text.querySelectorAll("span")[char];
     span.classList.add("fade");
     char++;
     if (char === splitText.length) {
@@ -26,27 +27,27 @@ function complete() {
     timer = null;
 }
 /* open popup window */
-var openModalButttons = document.querySelectorAll("[data-modal-target]");
-var closeModalButttons = document.querySelectorAll("[data-close-button]");
-var overlay = document.getElementById("overlay");
+const openModalButttons = document.querySelectorAll("[data-modal-target]");
+const closeModalButttons = document.querySelectorAll("[data-close-button]");
+const overlay = document.getElementById("overlay");
 /* this part makes a popup screen apear in order to create a new task */
-openModalButttons.forEach(function (button) {
-    var modal = document.querySelector(button.dataset.modalTarget);
-    button.addEventListener("click", function () {
+openModalButttons.forEach((button) => {
+    const modal = document.querySelector(button.dataset.modalTarget);
+    button.addEventListener("click", () => {
         openModal(modal);
         console.dir(button);
     });
 });
-overlay.addEventListener("click", function () {
-    var modals = document.querySelectorAll(".modal.active");
-    modals.forEach(function (modal) {
+overlay.addEventListener("click", () => {
+    const modals = document.querySelectorAll(".modal.active");
+    modals.forEach((modal) => {
         closeModal(modal);
         // closeTaskModal()
     });
 });
-closeModalButttons.forEach(function (button) {
-    button.addEventListener("click", function () {
-        var modal = button.closest(".modal");
+closeModalButttons.forEach((button) => {
+    button.addEventListener("click", () => {
+        const modal = button.closest(".modal");
         closeModal(modal);
     });
 });
@@ -63,7 +64,7 @@ function closeModal(modal) {
     overlay.classList.remove("active");
 }
 /* make a new task box */
-var myForm = document.getElementById("myForm");
+const myForm = document.getElementById("myForm");
 // let box = document.createElement("li");
 // let flex = document.createElement("div");
 // let header = document.createElement("div");
@@ -111,7 +112,8 @@ var myForm = document.getElementById("myForm");
 //   countdown.innerText = `${daysLeft.value|| "--"} days left`;
 //   flex.appendChild(countdown);
 // }
-myForm.addEventListener("submit", function (e) {
-    var modal = document.querySelector(".modal");
+myForm.addEventListener("submit", (e) => {
+    const modal = document.querySelector(".modal");
     closeModal(modal);
 });
+//# sourceMappingURL=app.js.map

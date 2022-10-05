@@ -48,7 +48,7 @@ overlay.addEventListener("click", () => {
   const modals = document.querySelectorAll(".modal.active");
   modals.forEach((modal) => {
     closeModal(modal);
-    closeTaskModal()
+    // closeTaskModal()
   });
 });
 
