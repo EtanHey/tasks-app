@@ -1,8 +1,9 @@
+
+
 /* this is meant to seperate each letter in a fancy class */
 const text = document.querySelector(".fancy");
 const strText = text.textContent;
 const splitText = strText.split("");
-console.log(splitText)
 text.textContent = "";
 splitText.forEach(i => {
   text.innerHTML += '<span>' + `${i}` + '</span>';
@@ -35,8 +36,8 @@ const closeModalButttons = document.querySelectorAll("[data-close-button]");
 const overlay = document.getElementById("overlay");
 
 /* this part makes a popup screen apear in order to create a new task */
-openModalButttons.forEach((button) => {
-  const modal:any = document.querySelector(button.dataset.modalTarget);
+openModalButttons.forEach((button:HTMLButtonElement) => {
+  const modal = document.querySelector<HTMLButtonElement>(button.dataset.modalTarget);
   button.addEventListener("click", () => {
     openModal(modal);
     console.dir(button)

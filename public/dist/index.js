@@ -49,7 +49,7 @@ function handleRegister(ev) {
                     password = password.value;
                     role = role.value;
                     gender = gender.value;
-                    return [4 /*yield*/, axios.post("/users/add-user", {
+                    return [4 /*yield*/, axios.post('/users/add-user', {
                             firstName: firstName,
                             lastName: lastName,
                             email: email,
@@ -72,7 +72,7 @@ function handleRegister(ev) {
 }
 function handleLogin(ev) {
     return __awaiter(this, void 0, void 0, function () {
-        var passwordStatus, email, password, userData, data, ok, aUser, verifiedUser, userId, verifiedUserId, error_1;
+        var passwordStatus, email, password, userData, data, ok, aUser, userId, verifiedUserId, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -87,11 +87,10 @@ function handleLogin(ev) {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, axios
-                            .post("/users/log-in", userData)];
+                    return [4 /*yield*/, axios.post('/users/log-in', userData)];
                 case 2:
                     data = (_a.sent()).data;
-                    ok = data.ok, aUser = data.aUser, verifiedUser = data.verifiedUser, userId = data.userId;
+                    ok = data.ok, aUser = data.aUser, userId = data.userId;
                     verifiedUserId = userId;
                     passwordStatus.style.color = '';
                     passwordStatus.innerHTML = '';
@@ -104,14 +103,14 @@ function handleLogin(ev) {
                         return [2 /*return*/];
                     }
                     if (!ok)
-                        throw new Error("no ok");
+                        throw new Error('no ok');
                     if (ok) {
                         window.location.href = "/home.html?id=" + verifiedUserId;
                     }
                     return [2 /*return*/];
                 case 3:
                     error_1 = _a.sent();
-                    console.log("error in handleLogin:");
+                    console.log('error in handleLogin:');
                     console.log(error_1.message);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
@@ -121,21 +120,21 @@ function handleLogin(ev) {
 }
 function handleRenderHome(ev) {
     return __awaiter(this, void 0, void 0, function () {
-        var currentPage, userId, data, userInfo, decoded, user, name, gender, lowTasks, mediumTasks, highTasks, arr, low, medium, high;
+        var currentPage, userId, data, userInfo, user, name, gender, lowTasks, mediumTasks, highTasks, arr, low, medium, high;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     ev.preventDefault();
                     currentPage = ev.target.title;
-                    userId = ev.target.location.search.replace(/.*?id=/g, "");
+                    userId = ev.target.location.search.replace(/.*?id=/g, '');
                     return [4 /*yield*/, axios.get("users/logged-in-user?userId=" + userId)];
                 case 1:
                     data = (_a.sent()).data;
-                    userInfo = data.userInfo, decoded = data.decoded;
+                    userInfo = data.userInfo;
                     getUsersTasks(userId, currentPage);
                     user = userInfo[0];
-                    name = document.querySelector("[data-name]");
-                    gender = document.querySelector("[data-gender]");
+                    name = document.querySelector('[data-name]');
+                    gender = document.querySelector('[data-gender]');
                     name.innerHTML = user.firstName + " " + user.lastName + "<br><span>" + user.role + "</span>";
                     if (user.gender === "male") {
                         gender.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ51Gk5jjB4qD-BkcDh_fhsE4HkfnLDblQPrQLaOY13u7v5MNoBea8JzZ5NZAa0G-gAcgY&usqp=CAU";
@@ -143,9 +142,9 @@ function handleRenderHome(ev) {
                     else {
                         gender.src = "https://static.vecteezy.com/system/resources/thumbnails/002/586/938/small/woman-cartoon-character-portrait-brunette-female-round-line-icon-free-vector.jpg";
                     }
-                    lowTasks = document.querySelector("[data-low]");
-                    mediumTasks = document.querySelector("[data-medium]");
-                    highTasks = document.querySelector("[data-high]");
+                    lowTasks = document.querySelector('[data-low]');
+                    mediumTasks = document.querySelector('[data-medium]');
+                    highTasks = document.querySelector('[data-high]');
                     return [4 /*yield*/, Promise.all([handleGetUrgencies(userId)])];
                 case 2:
                     arr = _a.sent();
@@ -182,8 +181,8 @@ function handleRenderRecentlyCreated(ev) {
             switch (_a.label) {
                 case 0:
                     ev.preventDefault();
-                    currentPage = ev.target.title.split(" ").join("");
-                    userId = ev.target.location.search.replace(/.*?id=/g, "");
+                    currentPage = ev.target.title.split(' ').join('');
+                    userId = ev.target.location.search.replace(/.*?id=/g, '');
                     return [4 /*yield*/, axios.get("users/logged-in-user?userId=" + userId)];
                 case 1:
                     data = (_a.sent()).data;
@@ -201,13 +200,13 @@ function handleRenderSettings(ev) {
                 case 0:
                     ev.preventDefault();
                     currentPage = ev.target.title;
-                    userId = ev.target.location.search.replace(/.*?id=/g, "");
-                    settingsForm = document.querySelector("[data-settings]");
+                    userId = ev.target.location.search.replace(/.*?id=/g, '');
+                    settingsForm = document.querySelector('[data-settings]');
                     return [4 /*yield*/, axios.get("users/logged-in-user?userId=" + userId)];
                 case 1:
                     data = (_a.sent()).data;
                     userInfo = data.userInfo;
-                    html = "";
+                    html = '';
                     user = userInfo[0];
                     html = "<form name=\"userUpdate\" id=\"userUpdate\" onsubmit=\"handleUserUpdate(event)\">\n  <h1>Update Your information</h1>\n  \n  <fieldset form=\"userUpdate\">\n  <legend>Personal Settings</legend>\n  <lable>First Name:</lable>\n  <input type=\"text\" name=\"firstNameUpdate\" value=\"" + user.firstName + "\" placeholder=\"" + user.firstName + "\">\n  <br>\n  <lable>Last Name:</lable>\n  <input type=\"text\" name=\"lastNameUpdate\" value=\"" + user.lastName + "\" placeholder=\"" + user.lastName + "\">\n  </fieldset>\n  <fieldset form=\"userUpdate\">\n  <legend>Account Settings</legend>\n  <lable>Email:</lable>\n  <input type=\"email\" name=\"emailUpdate\" value=\"" + user.email + "\" placeholder=\"" + user.email + "\">\n  <br>\n  <lable>Gender:</lable>\n  <select name=\"genderUpdate\" id=\"genderUpdate\"> \n  <option selected disabled value=\"" + user.gender + "\">" + user.gender + "</option>\n  <option value=\"male\">Male</option>\n  <option value=\"female\">Female</option>\n  </select>\n  <br>\n  <lable>Role:</lable>\n  <input type=\"text\" name=\"roleUpdate\" value=\"" + user.role + "\" placeholder=\"" + user.role + "\">\n  <br>\n  <lable>Password:</lable>\n  <input type=\"password\" name=\"passwordUpdate\" value=\"\" placeholder=\"Enter new password\">\n  \n  </fieldset>\n  <fieldset form=\"userUpdate\">\n  <legend>Password Confirmation</legend>\n  <h4>to save any of your settings changes, Enter your pass&shy;word bellow:</h4>\n  <input type=\"password\" name=\"passwordConfirmation\" placeholder=\"your current/old password\">\n  <input type=\"submit\" value=\"update info!\">\n  </fieldset>\n  <h6 data-password-status></h6>\n  </form>";
                     settingsForm.innerHTML = html;
@@ -219,51 +218,53 @@ function handleRenderSettings(ev) {
 function handleUserUpdate(ev) {
     var _a, _b, _c, _d, _e, _f, _g;
     return __awaiter(this, void 0, void 0, function () {
-        var userId, passwordStatus_1, firstNameUpdate, lastNameUpdate, emailUpdate, genderUpdate, roleUpdate, passwordUpdate, passwordConfirmation, data;
+        var userId, passwordStatus, firstNameUpdate, lastNameUpdate, emailUpdate, genderUpdate, roleUpdate, passwordUpdate, passwordConfirmation, data, updatedUser, updateStatus, error_2;
         return __generator(this, function (_h) {
-            ev.preventDefault();
-            try {
-                userId = ev.target.baseURI.slice(-24);
-                passwordStatus_1 = document.querySelector("[data-password-status]");
-                firstNameUpdate = (_a = ev.target.elements.firstNameUpdate) === null || _a === void 0 ? void 0 : _a.value;
-                lastNameUpdate = (_b = ev.target.elements.lastNameUpdate) === null || _b === void 0 ? void 0 : _b.value;
-                emailUpdate = (_c = ev.target.elements.emailUpdate) === null || _c === void 0 ? void 0 : _c.value;
-                genderUpdate = (_d = ev.target.elements.genderUpdate) === null || _d === void 0 ? void 0 : _d.value;
-                roleUpdate = (_e = ev.target.elements.roleUpdate) === null || _e === void 0 ? void 0 : _e.value;
-                passwordUpdate = (_f = ev.target.elements.passwordUpdate) === null || _f === void 0 ? void 0 : _f.value;
-                passwordConfirmation = (_g = ev.target.elements.passwordConfirmation) === null || _g === void 0 ? void 0 : _g.value;
-                data = axios
-                    .patch("/users/settings", {
-                    firstNameUpdate: firstNameUpdate,
-                    lastNameUpdate: lastNameUpdate,
-                    emailUpdate: emailUpdate,
-                    genderUpdate: genderUpdate,
-                    roleUpdate: roleUpdate,
-                    passwordUpdate: passwordUpdate,
-                    passwordConfirmation: passwordConfirmation,
-                    userId: userId
-                })
-                    .then(function (data) {
-                    var _a = data.data, updatedUser = _a.updatedUser, updateStatus = _a.updateStatus;
-                    passwordStatus_1.style.color = "";
+            switch (_h.label) {
+                case 0:
+                    ev.preventDefault();
+                    _h.label = 1;
+                case 1:
+                    _h.trys.push([1, 3, , 4]);
+                    userId = ev.target.baseURI.slice(-24);
+                    passwordStatus = document.querySelector('[data-password-status]');
+                    firstNameUpdate = (_a = ev.target.elements.firstNameUpdate) === null || _a === void 0 ? void 0 : _a.value;
+                    lastNameUpdate = (_b = ev.target.elements.lastNameUpdate) === null || _b === void 0 ? void 0 : _b.value;
+                    emailUpdate = (_c = ev.target.elements.emailUpdate) === null || _c === void 0 ? void 0 : _c.value;
+                    genderUpdate = (_d = ev.target.elements.genderUpdate) === null || _d === void 0 ? void 0 : _d.value;
+                    roleUpdate = (_e = ev.target.elements.roleUpdate) === null || _e === void 0 ? void 0 : _e.value;
+                    passwordUpdate = (_f = ev.target.elements.passwordUpdate) === null || _f === void 0 ? void 0 : _f.value;
+                    passwordConfirmation = (_g = ev.target.elements.passwordConfirmation) === null || _g === void 0 ? void 0 : _g.value;
+                    return [4 /*yield*/, axios.patch("/users/settings", {
+                            firstNameUpdate: firstNameUpdate,
+                            lastNameUpdate: lastNameUpdate,
+                            emailUpdate: emailUpdate,
+                            genderUpdate: genderUpdate,
+                            roleUpdate: roleUpdate,
+                            passwordUpdate: passwordUpdate,
+                            passwordConfirmation: passwordConfirmation,
+                            userId: userId
+                        })];
+                case 2:
+                    data = (_h.sent()).data;
+                    updatedUser = data.updatedUser, updateStatus = data.updateStatus;
+                    passwordStatus.style.color = "";
                     if (updatedUser === undefined) {
-                        passwordStatus_1.style.color = 'red';
-                        passwordStatus_1.innerHTML = "*You Either put in the wrong password or no password at all, TRY AGAIN!";
-                        return;
+                        passwordStatus.style.color = 'red';
+                        passwordStatus.innerHTML = "*You Either put in the wrong password or no password at all, TRY AGAIN!";
+                        return [2 /*return*/];
                     }
                     if (updateStatus === undefined) {
-                        passwordStatus_1.innerHTML = "<h2>Your Inxrformation was updated successfully</h2>";
+                        passwordStatus.innerHTML = "<h2>Your Inxrformation was updated successfully</h2>";
                     }
-                }).data;
-                // const {updatedUser} = data;
-                // }else{
-                // }
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_2 = _h.sent();
+                    console.log(error_2);
+                    console.log({ error: error_2.message });
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
-            catch (error) {
-                console.log(error);
-                console.log({ error: error.message });
-            }
-            return [2 /*return*/];
         });
     });
 }
@@ -291,27 +292,27 @@ function handlePasswordCheck(password, userId) {
 }
 function handlePageChange(ev) {
     return __awaiter(this, void 0, void 0, function () {
-        var userURL, requestedPage, data, data, newURL, data, newURL, data, error_2;
+        var userURL, requestedPage, data, newURL, data, newURL, data, newURL, data, newURL, error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     userURL = ev.target.baseURI;
-                    requestedPage = ev.target.outerText.split(" ").join("");
+                    requestedPage = ev.target.outerText.split(' ').join('');
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 10, , 11]);
-                    if (!(requestedPage === "home")) return [3 /*break*/, 3];
-                    return [4 /*yield*/, axios
-                            .post("/users/nav", { userURL: userURL, requestedPage: requestedPage })
-                            .then(function (response) {
-                            var newURL = response.data.newURL;
-                            window.location.href = newURL;
+                    if (!(requestedPage === 'home')) return [3 /*break*/, 3];
+                    return [4 /*yield*/, axios.post("/users/nav", {
+                            userURL: userURL,
+                            requestedPage: requestedPage
                         })];
                 case 2:
                     data = (_a.sent()).data;
+                    newURL = data.newURL;
+                    window.location.href = newURL;
                     _a.label = 3;
                 case 3:
-                    if (!(requestedPage === "settings")) return [3 /*break*/, 5];
+                    if (!(requestedPage === 'settings')) return [3 /*break*/, 5];
                     return [4 /*yield*/, axios.post("/users/nav", {
                             userURL: userURL,
                             requestedPage: requestedPage
@@ -322,7 +323,7 @@ function handlePageChange(ev) {
                     window.location.href = newURL;
                     _a.label = 5;
                 case 5:
-                    if (!(requestedPage === "info")) return [3 /*break*/, 7];
+                    if (!(requestedPage === 'info')) return [3 /*break*/, 7];
                     return [4 /*yield*/, axios.post("/users/nav", {
                             userURL: userURL,
                             requestedPage: requestedPage
@@ -333,23 +334,21 @@ function handlePageChange(ev) {
                     window.location.href = newURL;
                     _a.label = 7;
                 case 7:
-                    if (!(requestedPage === "RecentlyCreated")) return [3 /*break*/, 9];
+                    if (!(requestedPage === 'RecentlyCreated')) return [3 /*break*/, 9];
                     return [4 /*yield*/, axios.post("/users/nav", {
                             userURL: userURL,
                             requestedPage: requestedPage
-                        })
-                            .then(function (response) {
-                            var newURL = response.data.newURL;
-                            window.location.href = newURL;
                         })];
                 case 8:
                     data = (_a.sent()).data;
+                    newURL = data.newURL;
+                    window.location.href = newURL;
                     _a.label = 9;
                 case 9: return [3 /*break*/, 11];
                 case 10:
-                    error_2 = _a.sent();
-                    console.log("error in handleRenderPage:");
-                    console.log(error_2.message);
+                    error_3 = _a.sent();
+                    console.log('error in handleRenderPage:');
+                    console.log(error_3.message);
                     return [3 /*break*/, 11];
                 case 11: return [2 /*return*/];
             }
@@ -358,7 +357,7 @@ function handlePageChange(ev) {
 }
 function getUsersTasks(userId, currentPage) {
     return __awaiter(this, void 0, void 0, function () {
-        var data, currentUsersTasks, error_3;
+        var data, currentUsersTasks, error_4;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -370,9 +369,9 @@ function getUsersTasks(userId, currentPage) {
                     renderTasks(currentUsersTasks, currentPage);
                     return [3 /*break*/, 3];
                 case 2:
-                    error_3 = _a.sent();
-                    console.log("error in getUsersTasks:");
-                    console.log(error_3.message);
+                    error_4 = _a.sent();
+                    console.log('error in getUsersTasks:');
+                    console.log(error_4.message);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
@@ -384,26 +383,27 @@ function renderTasks(currentUsersTasks, currentPage) {
         var html, formHtml, tasksRoot, tasksCount, counterRoot, tasksRoot, nextRoot, nextTask, formField;
         return __generator(this, function (_a) {
             sortTasksByDate(currentUsersTasks);
-            html = "";
-            formHtml = "";
+            html = '';
+            formHtml = '';
             try {
-                if (currentPage === "Home") {
-                    tasksRoot = document.querySelector("[data-box-root]");
-                    tasksCount = document.querySelector("[data-task-count]");
+                if (currentPage === 'Home') {
+                    tasksRoot = document.querySelector('[data-box-root]');
+                    tasksCount = document.querySelector('[data-task-count]');
                     currentUsersTasks.forEach(function (task) {
                         html += "\n    <div class=\"box " + task.urgency + "\">\n                          <div id=\"box__flex\">\n                              <div class=\"box__header\">\n                                  <div class=\"box__title\">\n                                      <p class=\"box__title-text box__title-home-text\">" + task.title + "</p>\n                                  </div>\n                              </div>\n                              <div class=\"box__expln box__expln-home\">\n                                  <div class=\"flex-date\">\n                                      <i class=\"material-icons\">schedule</i>\n                                      <p>" + task.date + "</p>\n                                  </div>\n                              </div>\n                              <h4>" + task.urgency + " priority</h4>\n                          </div>\n                      </div>";
                     });
                     tasksRoot.innerHTML = html;
                     return [2 /*return*/];
                 }
-                if (currentPage === "RecentlyCreated") {
-                    counterRoot = document.querySelector("[data-counter]");
+                if (currentPage === 'RecentlyCreated') {
+                    counterRoot = document.querySelector('[data-counter]');
                     counterRoot.innerHTML = currentUsersTasks.length;
-                    tasksRoot = document.querySelector("[data-box-root]");
-                    nextRoot = document.querySelector("[data-next-root]");
+                    tasksRoot = document.querySelector('[data-box-root]');
+                    nextRoot = document.querySelector('[data-next-root]');
                     currentUsersTasks.forEach(function (task) {
                         if (task.description.length > 20) {
-                            task.descriptionShorted = task.description.substring(0, 15) + "...";
+                            task.descriptionShorted =
+                                task.description.substring(0, 15) + '...';
                         }
                         else {
                             task.descriptionShorted = task.description;
@@ -446,13 +446,15 @@ function addGlobalEventListener(type, selector, callback, options, parent) {
 function sortTasksByDate(tasks) {
     tasks.forEach(function (task) {
         var year = new Date(task.date).getFullYear();
-        var month = ("0" + (new Date(task.date).getMonth() + 1)).slice(-2);
-        var day = ("0" + (new Date(task.date).getDate() + 1)).slice(-2);
+        var month = ('0' + (new Date(task.date).getMonth() + 1)).slice(-2);
+        var day = ('0' + (new Date(task.date).getDate() + 1)).slice(-2);
         var stringDate = year + "-" + month + "-" + day;
         task.year = year;
         task.month = month;
         task.day = day;
-        task.date = new Date(task.date).toLocaleDateString().replace(/\//g, "-");
+        task.date = new Date(task.date)
+            .toLocaleDateString()
+            .replace(/\//g, '-');
         task.date = stringDate;
     });
     tasks.sort(function (a, b) { return a.day - b.day; });
@@ -495,7 +497,7 @@ function handleNewTask(ev) {
                     _a = ev.target.elements, color = _a.color, title = _a.title, description = _a.description, urgency = _a.urgency, location = _a.location, date = _a.date;
                     (color = color.value), (title = title.value), (description = description.value), (urgency = urgency.value), (location = location.value), (date = date.value);
                     return [4 /*yield*/, axios
-                            .post("/tasks/add-new-task", {
+                            .post('/tasks/add-new-task', {
                             color: color,
                             title: title,
                             description: description,
@@ -506,7 +508,7 @@ function handleNewTask(ev) {
                         })
                             .then(function (response) {
                             var currentUsersTasks = response.data.currentUsersTasks;
-                            renderTasks(currentUsersTasks, "RecentlyCreated");
+                            renderTasks(currentUsersTasks, 'RecentlyCreated');
                         })];
                 case 1:
                     _b.sent();
@@ -517,7 +519,7 @@ function handleNewTask(ev) {
 }
 function handleTaskUpdate(ev) {
     return __awaiter(this, void 0, void 0, function () {
-        var color, title, urgency, description, location, date, taskId, userId, data, currentUsersTasks, error_4;
+        var color, title, urgency, description, location, date, taskId, userId, data, currentUsersTasks, error_5;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -529,11 +531,11 @@ function handleTaskUpdate(ev) {
                     location = ev.target.elements.location.value;
                     date = ev.target.elements.date.value;
                     taskId = ev.target.elements.submit.dataset.id;
-                    userId = ev.target.baseURI.split("=")[1];
+                    userId = ev.target.baseURI.split('=')[1];
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, axios.patch("/tasks/updated-task", {
+                    return [4 /*yield*/, axios.patch('/tasks/updated-task', {
                             _id: taskId,
                             ownerId: userId,
                             color: color,
@@ -546,13 +548,13 @@ function handleTaskUpdate(ev) {
                 case 2:
                     data = (_a.sent()).data;
                     currentUsersTasks = data.currentUsersTasks;
-                    renderTasks(currentUsersTasks, "RecentlyCreated");
+                    renderTasks(currentUsersTasks, 'RecentlyCreated');
                     closeTaskModal();
                     return [3 /*break*/, 4];
                 case 3:
-                    error_4 = _a.sent();
-                    console.log("error in handleTaskUpdate");
-                    console.log({ error: error_4.message });
+                    error_5 = _a.sent();
+                    console.log('error in handleTaskUpdate');
+                    console.log({ error: error_5.message });
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }
@@ -561,15 +563,15 @@ function handleTaskUpdate(ev) {
 }
 function handleTaskCheck(ev) {
     return __awaiter(this, void 0, void 0, function () {
-        var timeChecked, taskId, userId, data, currentUsersTasks, error_5;
+        var timeChecked, taskId, userId, data, currentUsersTasks, error_6;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    timeChecked = new Date().toLocaleDateString().replace(/\//g, "-");
+                    timeChecked = new Date().toLocaleDateString().replace(/\//g, '-');
                     taskId = ev.target.dataset.check;
                     userId = ev.target.baseURI.slice(-24);
-                    return [4 /*yield*/, axios.patch("/tasks/check-task", {
+                    return [4 /*yield*/, axios.patch('/tasks/check-task', {
                             _id: taskId,
                             ownerId: userId,
                             timeChecked: timeChecked
@@ -577,12 +579,12 @@ function handleTaskCheck(ev) {
                 case 1:
                     data = (_a.sent()).data;
                     currentUsersTasks = data.currentUsersTasks;
-                    renderTasks(currentUsersTasks, "RecentlyCreated");
+                    renderTasks(currentUsersTasks, 'RecentlyCreated');
                     return [3 /*break*/, 3];
                 case 2:
-                    error_5 = _a.sent();
-                    console.log("error in handleTaskCheck");
-                    console.log({ error: error_5.message });
+                    error_6 = _a.sent();
+                    console.log('error in handleTaskCheck');
+                    console.log({ error: error_6.message });
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
@@ -591,7 +593,7 @@ function handleTaskCheck(ev) {
 }
 function handleTaskDelete(ev) {
     return __awaiter(this, void 0, void 0, function () {
-        var taskId, userURL, data, currentUsersTasks, currentPage, error_6;
+        var taskId, userURL, data, currentUsersTasks, currentPage, error_7;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -600,7 +602,7 @@ function handleTaskDelete(ev) {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, axios["delete"]("/tasks/delete-task", {
+                    return [4 /*yield*/, axios["delete"]('/tasks/delete-task', {
                             data: { taskId: taskId, userURL: userURL }
                         })];
                 case 2:
@@ -609,9 +611,9 @@ function handleTaskDelete(ev) {
                     renderTasks(currentUsersTasks, currentPage);
                     return [3 /*break*/, 4];
                 case 3:
-                    error_6 = _a.sent();
-                    console.log("error in handleTaskDelete");
-                    console.log({ error: error_6.message });
+                    error_7 = _a.sent();
+                    console.log('error in handleTaskDelete');
+                    console.log({ error: error_7.message });
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }
@@ -623,7 +625,7 @@ function handleColor(ev) {
         var newColor, formField;
         return __generator(this, function (_a) {
             newColor = ev.target.value;
-            formField = document.querySelector("#landing__task-next");
+            formField = document.querySelector('#landing__task-next');
             formField.style.backgroundColor = newColor;
             return [2 /*return*/];
         });
@@ -635,46 +637,46 @@ function openTaskModal(modal) {
         return __generator(this, function (_a) {
             if (modal == null)
                 return [2 /*return*/];
-            modal.classList.add("active");
-            overlay.classList.add("active");
+            modal.classList.add('active');
+            overlay.classList.add('active');
             return [2 /*return*/];
         });
     });
 }
 function closeTaskModal() {
-    var modal = document.querySelector(".taskModal");
+    var modal = document.querySelector('.taskModal');
     if (modal == null)
         return;
-    modal.classList.remove("active");
-    overlay.classList.remove("active");
+    modal.classList.remove('active');
+    overlay.classList.remove('active');
 }
 function renderTaskModal(ev) {
     return __awaiter(this, void 0, void 0, function () {
-        var taskId, modal, html, data, currentTask, error_7;
+        var taskId, modal, html, data, currentTask, error_8;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     taskId = ev.target.dataset.id;
-                    modal = document.querySelector(".taskModal");
-                    html = "";
+                    modal = document.querySelector('.taskModal');
+                    html = '';
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, axios.post("/tasks/task", { taskId: taskId })];
+                    return [4 /*yield*/, axios.post('/tasks/task', { taskId: taskId })];
                 case 2:
                     data = (_a.sent()).data;
                     currentTask = data;
                     if (!currentTask)
-                        throw new Error("no task in the modal");
+                        throw new Error('no task in the modal');
                     currentTask.date = currentTask.date.slice(0, 10);
                     html += "\n<div class=\"taskModal-header\">\n<h1>" + currentTask.title + "</h1>\n<button onclick=\"closeTaskModal()\" class=\"taskModal-closeButton\"> &times; </button>\n</div>\n<form onsubmit=\"handleTaskUpdate(event)\" class=\"taskModal-form\">\n<fieldset>\n<legend>Task title</legend>\n<div  class=\"taskModal-title\">\n<label for=\"title\">Task title:</label>\n<input type=\"text\" name=\"title\" id=\"title\" value=\"" + currentTask.title + "\">\n<label for=\"color\">Task title color:</label>\n<input onchange=\"handleColor(event)\" type=\"color\" name=\"color\" id=\"color\" value=\"" + currentTask.color + "\">\n</fieldset>\n</div>\n<div class=\"taskModal-urgency\">\n<select type=\"text\" name=\"urgency\" id=\"urg\">\n<option selected disabled value=\"" + currentTask.urgency + "\">" + currentTask.urgency + "</option>\n<option value=\"high\">High</option>\n<option value=\"medium\">Medium</option>\n<option value=\"low\">Low</option>\n</select>\n\n</div>\n<div class=\"taskModal-description\">\n<input type=\"text\" name=\"description\" id=\"description\" value=\"" + currentTask.description + "\">\n</div>\n<div class=\"taskModal-location\">\n<input type=\"text\" name='location' id='owner' value=\"" + currentTask.location + "\">\n</div>\n<div class=\"taskModal-date\">\n<input type=\"date\" name=\"date\" id=\"date\" value=\"" + currentTask.date + "\">\n</div>\n<input data-id=\"" + currentTask._id + "\" type=\"submit\" name=\"submit\" id=\"submit\" value=\"Update this task\">\n</form>\n<div onclick=\"closeTaskModal()\" data-taskModal-overlay class=\"overlay\"></div>";
                     modal.innerHTML = html;
                     openTaskModal(modal);
                     return [3 /*break*/, 4];
                 case 3:
-                    error_7 = _a.sent();
-                    console.log(error_7.message);
-                    console.log(error_7);
+                    error_8 = _a.sent();
+                    console.log(error_8.message);
+                    console.log(error_8);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }

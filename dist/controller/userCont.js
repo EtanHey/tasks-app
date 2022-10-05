@@ -1,16 +1,28 @@
-import user from '../model/userModel';
-import jwt from 'jwt-simple';
-
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.updateUser = exports.passwordCheck = exports.renderPage = exports.renderUser = exports.login = exports.addUser = void 0;
+const userModel_1 = __importDefault(require("../model/userModel"));
+const jwt_simple_1 = __importDefault(require("jwt-simple"));
 const secret = process.env.JWT_SECRET;
-
-export const addUser = async (req, res) => {
+const addUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let { firstName, lastName, email, password, role, gender } = req.body;
-
         if (firstName && lastName && email && password && role && gender) {
-            const aUser = await user.findOne({ email: email });
+            const aUser = yield userModel_1.default.findOne({ email: email });
             if (!aUser) {
-                const newUser = new user({
+                const newUser = new userModel_1.default({
                     firstName,
                     lastName,
                     email,
@@ -18,43 +30,41 @@ export const addUser = async (req, res) => {
                     role,
                     gender
                 });
-
-                const result = await newUser.save();
+                const result = yield newUser.save();
                 res.send({ result });
                 return;
             }
             res.send({ aUser });
-        } else throw new Error(`You've missed something`);
-    } catch (error) {
+        }
+        else
+            throw new Error(`You've missed something`);
+    }
+    catch (error) {
         console.error(error);
         res.send({ error: error.message });
     }
-};
-
-export const login = async (req, res) => {
+});
+exports.addUser = addUser;
+const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { email, password } = req.body;
     try {
-        const currentLogin = await user
-            .findOne({ email: email })
-            .collation({ locale: 'en_US', strength: 1 });
-
+        const currentLogin = yield userModel_1.default.findOne({ email: email }).collation({ locale: 'en_US', strength: 1 });
         if (currentLogin) {
-            const userEmail = await currentLogin.email;
-            const userVerification: any = await user.findOne({
+            const userEmail = yield currentLogin.email;
+            const userVerification = yield userModel_1.default.findOne({
                 email: userEmail,
                 password: password
             });
             if (userVerification) {
-                const verifiedUser: any = await user.find({
+                const verifiedUser = yield userModel_1.default.find({
                     email: userEmail,
                     password: password
                 });
-
                 if (verifiedUser.length === 1) {
                     const userId = userVerification._id.toString();
                     const userRole = userVerification.role;
                     const payload = { userId, userRole };
-                    const information = jwt.encode(payload, secret);
+                    const information = jwt_simple_1.default.encode(payload, secret);
                     res.cookie('currentUser', information, {});
                     res.send({ ok: true, currentLogin, verifiedUser, userId });
                     return;
@@ -63,38 +73,33 @@ export const login = async (req, res) => {
                 return;
             }
             res.send({ aUser: true });
-        } else {
+        }
+        else {
             res.send({ aUser: false });
         }
-    } catch (error) {
+    }
+    catch (error) {
         console.log('error in login:');
         console.log(error.message);
-
         res.send({ error: error.message });
     }
-};
-
-export const renderUser = async (req, res) => {
+});
+exports.login = login;
+const renderUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { currentUser } = req.cookies;
-    const decoded = jwt.decode(currentUser, secret);
-
+    const decoded = jwt_simple_1.default.decode(currentUser, secret);
     const { userId, userRole } = decoded;
-
-    const userInfo = await user.find({ _id: userId });
-
+    const userInfo = yield userModel_1.default.find({ _id: userId });
     res.send({ userInfo: userInfo, decoded });
-};
-
-export const renderPage = async (req, res) => {
+});
+exports.renderUser = renderUser;
+const renderPage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userURL, requestedPage } = req.body;
-
     const appURL = userURL.split('/')[2];
     const userId = userURL.slice(-24);
-    const currentUser = await user.find({ _id: userId });
+    const currentUser = yield userModel_1.default.find({ _id: userId });
     const newURL = `/${requestedPage}.html?id=${userId}`;
-
     let { firstName, lastName, gender, role, email, password } = currentUser[0];
-
     if (requestedPage === 'home') {
         try {
             res.send({
@@ -104,16 +109,15 @@ export const renderPage = async (req, res) => {
                 role: role,
                 newURL: newURL
             });
-        } catch (error) {
+        }
+        catch (error) {
             console.log('error in renderPage: home');
             console.log(error.message);
-
             res.send({ error: error.message });
             // }
         }
         return;
     }
-
     if (requestedPage === 'settings') {
         try {
             res.send({
@@ -125,101 +129,87 @@ export const renderPage = async (req, res) => {
                 password: password,
                 newURL: newURL
             });
-        } catch (error) {
+        }
+        catch (error) {
             console.log('error in renderPage: settings');
             console.log(error.message);
-
             res.send({ error: error.message });
             // }
         }
         return;
     }
-
     if (requestedPage === 'info') {
         try {
             res.send({
                 newURL: newURL
             });
-        } catch (error) {
+        }
+        catch (error) {
             console.log('error in renderPage: info');
             console.log(error.message);
-
             res.send({ error: error.message });
             // }
         }
         return;
     }
-
     if (requestedPage === 'RecentlyCreated') {
         try {
             res.send({
                 newURL: newURL
             });
-        } catch (error) {
+        }
+        catch (error) {
             console.log('error in renderPage: RecentlyCreated');
             console.log(error.message);
-
             res.send({ error: error.message });
             // }
         }
         return;
     }
-};
-
-export const passwordCheck = async (req, res) => {
+});
+exports.renderPage = renderPage;
+const passwordCheck = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { password, userId } = req.body;
-
-        const isRightPassword = await user.find({
+        const isRightPassword = yield userModel_1.default.find({
             _id: userId,
             password: password
         });
         res.send({ isRightPassword });
-    } catch (error) {
+    }
+    catch (error) {
         console.log('error in renderPage: RecentlyCreated');
         console.log(error.message);
-
         res.send({ error: error.message });
     }
-};
-
-export const updateUser = async (req, res) => {
+});
+exports.passwordCheck = passwordCheck;
+const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const {
-            firstNameUpdate,
-            lastNameUpdate,
-            emailUpdate,
-            genderUpdate,
-            roleUpdate,
-            passwordUpdate,
-            passwordConfirmation,
-            userId
-        } = req.body;
-
-        const updateUser = await user.updateOne(
-            { _id: userId, password: passwordConfirmation },
-            {
-                firstName: firstNameUpdate,
-                lastName: lastNameUpdate,
-                email: emailUpdate,
-                gender: genderUpdate,
-                role: roleUpdate,
-                password: passwordUpdate
-            }
-        );
-        const updateStatus = await updateUser.matchedCount;
+        const { firstNameUpdate, lastNameUpdate, emailUpdate, genderUpdate, roleUpdate, passwordUpdate, passwordConfirmation, userId } = req.body;
+        const updateUser = yield userModel_1.default.updateOne({ _id: userId, password: passwordConfirmation }, {
+            firstName: firstNameUpdate,
+            lastName: lastNameUpdate,
+            email: emailUpdate,
+            gender: genderUpdate,
+            role: roleUpdate,
+            password: passwordUpdate
+        });
+        const updateStatus = yield updateUser.matchedCount;
         if (updateStatus === 1) {
-            const updatedUser = await user.find({ _id: userId });
-
+            const updatedUser = yield userModel_1.default.find({ _id: userId });
             res.send({ updatedUser: updatedUser });
             return;
         }
         if (updateStatus === 0) {
             res.send({ updateStatus: updateStatus });
         }
-    } catch (error) {
+    }
+    catch (error) {
         console.log('error in updateUser');
         console.log(error.message);
         res.send({ error: error.message });
     }
-};
+});
+exports.updateUser = updateUser;
+//# sourceMappingURL=userCont.js.map

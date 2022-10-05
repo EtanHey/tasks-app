@@ -59,7 +59,13 @@ exports.addNewTask = function (req, res) { return __awaiter(void 0, void 0, void
             case 0:
                 _e.trys.push([0, 4, , 5]);
                 _a = req.body, color = _a.color, title = _a.title, description = _a.description, urgency = _a.urgency, location = _a.location, date = _a.date, userId = _a.userId;
-                if (!(userId && color && title && description && urgency && location && date)) return [3 /*break*/, 3];
+                if (!(userId &&
+                    color &&
+                    title &&
+                    description &&
+                    urgency &&
+                    location &&
+                    date)) return [3 /*break*/, 3];
                 newTask = new taskModel_1["default"]({
                     color: color,
                     title: title,
@@ -76,7 +82,8 @@ exports.addNewTask = function (req, res) { return __awaiter(void 0, void 0, void
                 _d = {};
                 return [4 /*yield*/, taskModel_1["default"].find({ ownerId: userId })];
             case 2:
-                _c.apply(_b, [(_d.currentUsersTasks = _e.sent(), _d)]);
+                _c.apply(_b, [(_d.currentUsersTasks = _e.sent(),
+                        _d)]);
                 _e.label = 3;
             case 3: return [3 /*break*/, 5];
             case 4:
@@ -138,7 +145,6 @@ exports.checkTask = function (req, res) { return __awaiter(void 0, void 0, void 
                 return [4 /*yield*/, taskModel_1["default"].find({ ownerId: ownerId })];
             case 3:
                 currentUsersTasks_1 = _b.sent();
-                console.log(currentUsersTasks_1);
                 res.send({ currentUsersTasks: currentUsersTasks_1 });
                 return [2 /*return*/];
             case 4: return [4 /*yield*/, taskModel_1["default"].findOneAndUpdate({ _id: _id, ownerId: ownerId }, { timeChecked: timeChecked, checked: true })];
@@ -215,7 +221,10 @@ exports.getUrgencies = function (req, res) { return __awaiter(void 0, void 0, vo
                 return [4 /*yield*/, taskModel_1["default"].find({ ownerId: userId, urgency: 'low' })];
             case 1:
                 lowUrgency = _a.sent();
-                return [4 /*yield*/, taskModel_1["default"].find({ ownerId: userId, urgency: 'medium' })];
+                return [4 /*yield*/, taskModel_1["default"].find({
+                        ownerId: userId,
+                        urgency: 'medium'
+                    })];
             case 2:
                 mediumUrgency = _a.sent();
                 return [4 /*yield*/, taskModel_1["default"].find({ ownerId: userId, urgency: 'high' })];

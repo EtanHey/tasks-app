@@ -1,143 +1,135 @@
-async function handleRegister(ev) {
-  ev.preventDefault();
-  const registerStatus = document.querySelector('[data-register-status]');
-  let { firstName, lastName, email, password, role, gender } =
-    ev.target.elements;
-  firstName = firstName.value;
-  lastName = lastName.value;
-  email = email.value;
-  password = password.value;
-  role = role.value;
-  gender = gender.value;
-  const { data } = await axios.post("/users/add-user", {
-    firstName,
-    lastName,
-    email,
-    password,
-    role,
-    gender,
-  });
-  const {aUser} = data;
-  if(aUser){
-    registerStatus.innerHTML = `<h2>hello ${aUser.firstName}, you seem to already have an account under that email!<h2> <a href="/">Log in here</a>`
-    return;
-  }
-  window.location.href = `/`;
 
+async function handleRegister(ev) {
+    ev.preventDefault();
+    const registerStatus = document.querySelector('[data-register-status]');
+    let { firstName, lastName, email, password, role, gender } =
+        ev.target.elements;
+    firstName = firstName.value;
+    lastName = lastName.value;
+    email = email.value;
+    password = password.value;
+    role = role.value;
+    gender = gender.value;
+    const { data } = await axios.post('/users/add-user', {
+        firstName,
+        lastName,
+        email,
+        password,
+        role,
+        gender
+    });
+    const { aUser } = data;
+    if (aUser) {
+        registerStatus.innerHTML = `<h2>hello ${aUser.firstName}, you seem to already have an account under that email!<h2> <a href="/">Log in here</a>`;
+        return;
+    }
+    window.location.href = `/`;
 }
 
 async function handleLogin(ev) {
-  ev.preventDefault();
-  const passwordStatus = document.querySelector('[data-password-status]')
-  const email = ev.target.elements.email.value;
-  const password = ev.target.elements.password.value;
-  const userData = {
-    email: email,
-    password: password,
-  };
-  try {
-    const {data} = await axios
-      .post("/users/log-in", userData)
+    ev.preventDefault();
+    const passwordStatus = document.querySelector<HTMLElement>(
+        '[data-password-status]'
+    );
+    const email = ev.target.elements.email.value;
+    const password = ev.target.elements.password.value;
+    const userData = {
+        email: email,
+        password: password
+    };
+    try {
+        const { data } = await axios.post('/users/log-in', userData);
 
-        const {ok, aUser, verifiedUser, userId} = data;
-
+        const { ok, aUser, userId } = data;
 
         const verifiedUserId = userId;
 
-        passwordStatus.style.color = ''
-        passwordStatus.innerHTML = ''
-        if(aUser) {
-
-          passwordStatus.style.color = 'red'
-          passwordStatus.innerHTML = `<h1>*Wrong password!</h1>`;
-          
+        passwordStatus.style.color = '';
+        passwordStatus.innerHTML = '';
+        if (aUser) {
+            passwordStatus.style.color = 'red';
+            passwordStatus.innerHTML = `<h1>*Wrong password!</h1>`;
         }
-        if(!aUser && !ok){
-
-          
-          passwordStatus.innerHTML = `<h2>This email doesn't seem to exist in out database, Try again, or register bellow:</h2>`
-          return;
+        if (!aUser && !ok) {
+            passwordStatus.innerHTML = `<h2>This email doesn't seem to exist in out database, Try again, or register bellow:</h2>`;
+            return;
         }
-        if (!ok) throw new Error("no ok");
+        if (!ok) throw new Error('no ok');
         if (ok) {
-
-          window.location.href = `/home.html?id=${verifiedUserId}`;
-        } 
-          
-          return
+            window.location.href = `/home.html?id=${verifiedUserId}`;
         }
-      
-   catch (error) {
-    console.log("error in handleLogin:");
-    console.log(error.message);
-    // }
-  }
+
+        return;
+    } catch (error) {
+        console.log('error in handleLogin:');
+        console.log(error.message);
+        // }
+    }
 }
 
 async function handleRenderHome(ev) {
-  ev.preventDefault();
-  const currentPage = ev.target.title;
+    ev.preventDefault();
+    const currentPage = ev.target.title;
 
-  let userId = ev.target.location.search.replace(/.*?id=/g, "");
-  const { data } = await axios.get(`users/logged-in-user?userId=${userId}`);
-  const { userInfo, decoded } = data;
+    let userId = ev.target.location.search.replace(/.*?id=/g, '');
+    const { data } = await axios.get(`users/logged-in-user?userId=${userId}`);
+    const { userInfo } = data;
 
-  
-  getUsersTasks(userId, currentPage);
-  const user = userInfo[0];
-  const name = document.querySelector("[data-name]");
-  const gender = document.querySelector("[data-gender]");
-  name.innerHTML = `${user.firstName} ${user.lastName}<br><span>${user.role}</span>`;
-  if (user.gender === `male`) {
-    gender.src = `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ51Gk5jjB4qD-BkcDh_fhsE4HkfnLDblQPrQLaOY13u7v5MNoBea8JzZ5NZAa0G-gAcgY&usqp=CAU`;
-  } else {
-    gender.src = `https://static.vecteezy.com/system/resources/thumbnails/002/586/938/small/woman-cartoon-character-portrait-brunette-female-round-line-icon-free-vector.jpg`;
-  }
+    getUsersTasks(userId, currentPage);
+    const user = userInfo[0];
+    const name = document.querySelector('[data-name]');
+    const gender = document.querySelector<HTMLImageElement>('[data-gender]');
+    name.innerHTML = `${user.firstName} ${user.lastName}<br><span>${user.role}</span>`;
+    if (user.gender === `male`) {
+        gender.src = `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ51Gk5jjB4qD-BkcDh_fhsE4HkfnLDblQPrQLaOY13u7v5MNoBea8JzZ5NZAa0G-gAcgY&usqp=CAU`;
+    } else {
+        gender.src = `https://static.vecteezy.com/system/resources/thumbnails/002/586/938/small/woman-cartoon-character-portrait-brunette-female-round-line-icon-free-vector.jpg`;
+    }
 
-  const lowTasks = document.querySelector("[data-low]");
-  const mediumTasks = document.querySelector("[data-medium]");
-  const highTasks = document.querySelector("[data-high]");
+    const lowTasks = document.querySelector('[data-low]');
+    const mediumTasks = document.querySelector('[data-medium]');
+    const highTasks = document.querySelector('[data-high]');
 
-  const arr = await Promise.all([handleGetUrgencies(userId)]);
-  const low = arr[0][0];
+    const arr = await Promise.all([handleGetUrgencies(userId)]);
+    const low = arr[0][0];
 
-  lowTasks.innerHTML = low.length;
-  const medium = arr[0][1];
+    lowTasks.innerHTML = low.length;
+    const medium = arr[0][1];
 
-  mediumTasks.innerHTML = medium.length;
-  const high = arr[0][2];
+    mediumTasks.innerHTML = medium.length;
+    const high = arr[0][2];
 
-  highTasks.innerHTML = high.length;
+    highTasks.innerHTML = high.length;
 }
 
 async function handleGetUrgencies(userId) {
-  const { data } = await axios.get(`tasks/get-urgencies?userId=${userId}`);
+    const { data } = await axios.get(`tasks/get-urgencies?userId=${userId}`);
 
-  const { lowUrgency, mediumUrgency, highUrgency } = data;
-  let arr = [lowUrgency, mediumUrgency, highUrgency];
+    const { lowUrgency, mediumUrgency, highUrgency } = data;
+    let arr = [lowUrgency, mediumUrgency, highUrgency];
 
-  return arr;
+    return arr;
 }
 
 async function handleRenderRecentlyCreated(ev) {
-  ev.preventDefault();
-  const currentPage = ev.target.title.split(" ").join("");
-  let userId = ev.target.location.search.replace(/.*?id=/g, "");
-  const { data } = await axios.get(`users/logged-in-user?userId=${userId}`);
-  getUsersTasks(userId, currentPage);
+    ev.preventDefault();
+    const currentPage = ev.target.title.split(' ').join('');
+    let userId = ev.target.location.search.replace(/.*?id=/g, '');
+    const { data } = await axios.get(`users/logged-in-user?userId=${userId}`);
+    getUsersTasks(userId, currentPage);
 }
 
 async function handleRenderSettings(ev) {
-  ev.preventDefault();
-  const currentPage = ev.target.title;
-  let userId = ev.target.location.search.replace(/.*?id=/g, "");
-  const settingsForm = document.querySelector("[data-settings]");
+    ev.preventDefault();
+    const currentPage = ev.target.title;
+    let userId = ev.target.location.search.replace(/.*?id=/g, '');
+    const settingsForm = document.querySelector('[data-settings]');
 
-  const { data } = await axios.get(`users/logged-in-user?userId=${userId}`);
-  const { userInfo } = data;
-  let html = "";
-  const user = userInfo[0];
-  html = `<form name="userUpdate" id="userUpdate" onsubmit="handleUserUpdate(event)">
+    const { data } = await axios.get(`users/logged-in-user?userId=${userId}`);
+    const { userInfo } = data;
+    let html = '';
+    const user = userInfo[0];
+    html = `<form name="userUpdate" id="userUpdate" onsubmit="handleUserUpdate(event)">
   <h1>Update Your information</h1>
   
   <fieldset form="userUpdate">
@@ -175,145 +167,138 @@ async function handleRenderSettings(ev) {
   </fieldset>
   <h6 data-password-status></h6>
   </form>`;
-  settingsForm.innerHTML = html;
+    settingsForm.innerHTML = html;
 }
 
 async function handleUserUpdate(ev) {
-  ev.preventDefault();
-  try {
-    const userId = ev.target.baseURI.slice(-24);
-    const passwordStatus = document.querySelector("[data-password-status]");
-    const firstNameUpdate = ev.target.elements.firstNameUpdate?.value;
-    const lastNameUpdate = ev.target.elements.lastNameUpdate?.value;
-    const emailUpdate = ev.target.elements.emailUpdate?.value;
-    const genderUpdate = ev.target.elements.genderUpdate?.value;
-    const roleUpdate = ev.target.elements.roleUpdate?.value;
-    const passwordUpdate = ev.target.elements.passwordUpdate?.value;
-    const passwordConfirmation = ev.target.elements.passwordConfirmation?.value;
-    // const isRightPassword = await handlePasswordCheck(passwordConfirmation, userId)
-    // if(isRightPassword){
+    ev.preventDefault();
+    try {
+        const userId = ev.target.baseURI.slice(-24);
+        const passwordStatus = document.querySelector<HTMLElement>(
+            '[data-password-status]'
+        );
+        const firstNameUpdate = ev.target.elements.firstNameUpdate?.value;
+        const lastNameUpdate = ev.target.elements.lastNameUpdate?.value;
+        const emailUpdate = ev.target.elements.emailUpdate?.value;
+        const genderUpdate = ev.target.elements.genderUpdate?.value;
+        const roleUpdate = ev.target.elements.roleUpdate?.value;
+        const passwordUpdate = ev.target.elements.passwordUpdate?.value;
+        const passwordConfirmation =
+            ev.target.elements.passwordConfirmation?.value;
+        // const isRightPassword = await handlePasswordCheck(passwordConfirmation, userId)
+        // if(isRightPassword){
 
-    const { data } = axios
-      .patch(`/users/settings`, {
-        firstNameUpdate,
-        lastNameUpdate,
-        emailUpdate,
-        genderUpdate,
-        roleUpdate,
-        passwordUpdate,
-        passwordConfirmation,
-        userId,
-      })
-      .then((data) => {
-        const {updatedUser, updateStatus} = data.data;
+        const { data } = await axios.patch(`/users/settings`, {
+            firstNameUpdate,
+            lastNameUpdate,
+            emailUpdate,
+            genderUpdate,
+            roleUpdate,
+            passwordUpdate,
+            passwordConfirmation,
+            userId
+        });
+
+        const { updatedUser, updateStatus } = data;
         passwordStatus.style.color = ``;
-        if(updatedUser === undefined) {
-          passwordStatus.style.color = 'red';
-          passwordStatus.innerHTML = `*You Either put in the wrong password or no password at all, TRY AGAIN!`
-          return
+        if (updatedUser === undefined) {
+            passwordStatus.style.color = 'red';
+            passwordStatus.innerHTML = `*You Either put in the wrong password or no password at all, TRY AGAIN!`;
+            return;
         }
-        if(updateStatus === undefined){
-          passwordStatus.innerHTML = `<h2>Your Inxrformation was updated successfully</h2>`;
+        if (updateStatus === undefined) {
+            passwordStatus.innerHTML = `<h2>Your Inxrformation was updated successfully</h2>`;
         }
 
-      });
-    // const {updatedUser} = data;
+        // const {updatedUser} = data;
 
-
-
-    // }else{
-    // }
-  } catch (error) {
-    console.log(error);
-    console.log({ error: error.message });
-  }
+        // }else{
+        // }
+    } catch (error) {
+        console.log(error);
+        console.log({ error: error.message });
+    }
 }
 async function handlePasswordCheck(password, userId) {
-  const { data } = await axios.post(`/users/passwordCheck`, {
-    password,
-    userId,
-  });
-  const { isRightPassword } = data;
-  if (isRightPassword.length > 0) {
-    return true;
-  } else return false;
+    const { data } = await axios.post(`/users/passwordCheck`, {
+        password,
+        userId
+    });
+    const { isRightPassword } = data;
+    if (isRightPassword.length > 0) {
+        return true;
+    } else return false;
 }
 async function handlePageChange(ev) {
-  const userURL = ev.target.baseURI;
+    const userURL = ev.target.baseURI;
 
-  const requestedPage = ev.target.outerText.split(" ").join("");
+    const requestedPage = ev.target.outerText.split(' ').join('');
 
+    try {
+        if (requestedPage === 'home') {
+            const { data } = await axios.post(`/users/nav`, {
+                userURL,
+                requestedPage
+            });
 
-  try {
-    if (requestedPage === "home") {
-      const { data } = await axios
-        .post(`/users/nav`, { userURL, requestedPage })
-        .then((response) => {
-          const { newURL } = response.data;
-          window.location.href = newURL;
-        });
+            const { newURL } = data;
+            window.location.href = newURL;
+        }
+        if (requestedPage === 'settings') {
+            const { data } = await axios.post(`/users/nav`, {
+                userURL,
+                requestedPage
+            });
+            const { newURL } = data;
+
+            window.location.href = newURL;
+        }
+        if (requestedPage === 'info') {
+            const { data } = await axios.post(`/users/nav`, {
+                userURL,
+                requestedPage
+            });
+            const { newURL } = data;
+            window.location.href = newURL;
+        }
+        if (requestedPage === 'RecentlyCreated') {
+            const { data } = await axios.post(`/users/nav`, {
+                userURL,
+                requestedPage
+            });
+
+            const { newURL } = data;
+            window.location.href = newURL;
+        }
+    } catch (error) {
+        console.log('error in handleRenderPage:');
+        console.log(error.message);
+        // }
     }
-    if (requestedPage === "settings") {
-      const { data } = await axios.post(`/users/nav`, {
-        userURL,
-        requestedPage,
-      });
-      const { newURL } = data;
-
-
-      window.location.href = newURL;
-    }
-    if (requestedPage === "info") {
-      const { data } = await axios.post(`/users/nav`, {
-        userURL,
-        requestedPage,
-      });
-      const { newURL } = data;
-      window.location.href = newURL;
-    }
-    if (requestedPage === "RecentlyCreated") {
-
-      
-      const { data } = await axios.post(`/users/nav`, {
-        userURL,
-        requestedPage,
-      })
-      .then((response) => {
-        
-        const { newURL } = response.data;
-        window.location.href = newURL;
-
-      })
-    }
-  } catch (error) {
-    console.log("error in handleRenderPage:");
-    console.log(error.message);
-    // }
-  }
 }
 
 async function getUsersTasks(userId, currentPage) {
-  try {
-    const { data } = await axios.get(`tasks/getTasks?ownerId=${userId}`);
-    const currentUsersTasks = data;
-    renderTasks(currentUsersTasks, currentPage);
-  } catch (error) {
-    console.log("error in getUsersTasks:");
-    console.log(error.message);
-    // }
-  }
+    try {
+        const { data } = await axios.get(`tasks/getTasks?ownerId=${userId}`);
+        const currentUsersTasks = data;
+        renderTasks(currentUsersTasks, currentPage);
+    } catch (error) {
+        console.log('error in getUsersTasks:');
+        console.log(error.message);
+        // }
+    }
 }
 async function renderTasks(currentUsersTasks, currentPage) {
-  sortTasksByDate(currentUsersTasks);
+    sortTasksByDate(currentUsersTasks);
 
-  let html = "";
-  let formHtml = "";
-  try {
-    if (currentPage === "Home") {
-      const tasksRoot = document.querySelector("[data-box-root]");
-      const tasksCount = document.querySelector("[data-task-count]");
-      currentUsersTasks.forEach((task) => {
-        html += `
+    let html = '';
+    let formHtml = '';
+    try {
+        if (currentPage === 'Home') {
+            const tasksRoot = document.querySelector('[data-box-root]');
+            const tasksCount = document.querySelector('[data-task-count]');
+            currentUsersTasks.forEach((task) => {
+                html += `
     <div class="box ${task.urgency}">
                           <div id="box__flex">
                               <div class="box__header">
@@ -330,23 +315,24 @@ async function renderTasks(currentUsersTasks, currentPage) {
                               <h4>${task.urgency} priority</h4>
                           </div>
                       </div>`;
-      });
-      tasksRoot.innerHTML = html;
-      return;
-    }
-    if (currentPage === "RecentlyCreated") {
-      const counterRoot = document.querySelector("[data-counter]");
-      counterRoot.innerHTML = currentUsersTasks.length;
-      const tasksRoot = document.querySelector("[data-box-root]");
-      const nextRoot = document.querySelector("[data-next-root]");
-      currentUsersTasks.forEach((task) => {
-        if (task.description.length > 20) {
-          task.descriptionShorted = task.description.substring(0, 15) + "...";
-        } else {
-          task.descriptionShorted = task.description;
+            });
+            tasksRoot.innerHTML = html;
+            return;
         }
-        if (!task.checked) {
-          html += `
+        if (currentPage === 'RecentlyCreated') {
+            const counterRoot = document.querySelector('[data-counter]');
+            counterRoot.innerHTML = currentUsersTasks.length;
+            const tasksRoot = document.querySelector('[data-box-root]');
+            const nextRoot = document.querySelector('[data-next-root]');
+            currentUsersTasks.forEach((task) => {
+                if (task.description.length > 20) {
+                    task.descriptionShorted =
+                        task.description.substring(0, 15) + '...';
+                } else {
+                    task.descriptionShorted = task.description;
+                }
+                if (!task.checked) {
+                    html += `
      <li class="box">
                       <div id="box__flex">
                           <div class="box__header">
@@ -374,9 +360,9 @@ async function renderTasks(currentUsersTasks, currentPage) {
                       </div>
 
                   </li>`;
-          return;
-        }
-        html += `
+                    return;
+                }
+                html += `
         <li class="box">
         <del>
                       <div id="box__flex">
@@ -405,14 +391,14 @@ async function renderTasks(currentUsersTasks, currentPage) {
                       </div>
                       </del>
                   </li>`;
-      });
+            });
 
-      const nextTask = getNextTask(currentUsersTasks);
+            const nextTask = getNextTask(currentUsersTasks);
 
-      tasksRoot.innerHTML = html;
+            tasksRoot.innerHTML = html;
 
-      if (nextTask) {
-        formHtml = `
+            if (nextTask) {
+                formHtml = `
     <input onchange="handleColor(event)" type="color" name="color" id="color" value="${nextTask.color}">
                         <div  class="task-title">
                             <input type="text" name="title" id="title" value="${nextTask.title}">
@@ -437,208 +423,210 @@ async function renderTasks(currentUsersTasks, currentPage) {
                         </div>
                         <input data-id="${nextTask._id}" type="submit" name="submit" id="submit" value="Update this task">
 `;
-}
-if (!nextTask) {
-  formHtml = `<h1> You are all caught up! </h1>`;
-}
-const formField = nextRoot.parentElement;
-formField.style.background = nextTask.color;
+            }
+            if (!nextTask) {
+                formHtml = `<h1> You are all caught up! </h1>`;
+            }
+            const formField = nextRoot.parentElement;
+            formField.style.background = nextTask.color;
 
-nextRoot.innerHTML = formHtml;
-return;
-}
-} catch (error) {
-console.log(error);
-console.error(error.message);
-}
+            nextRoot.innerHTML = formHtml;
+            return;
+        }
+    } catch (error) {
+        console.log(error);
+        console.error(error.message);
+    }
 }
 
 function addGlobalEventListener(
-  type,
-  selector,
-  callback,
-  options,
-  parent = document
-) {
-  parent.addEventListener(
     type,
-    (e) => {
-      if (e.target.matches(selector)) callback(e);
-    },
-    options
-  );
+    selector,
+    callback,
+    options,
+    parent = document
+) {
+    parent.addEventListener(
+        type,
+        (e) => {
+            if (e.target.matches(selector)) callback(e);
+        },
+        options
+    );
 }
 
 function sortTasksByDate(tasks) {
-  tasks.forEach((task) => {
-    const year = new Date(task.date).getFullYear();
-    const month = ("0" + (new Date(task.date).getMonth() + 1)).slice(-2);
-    const day = ("0" + (new Date(task.date).getDate() + 1)).slice(-2);
-    const stringDate = `${year}-${month}-${day}`;
+    tasks.forEach((task) => {
+        const year = new Date(task.date).getFullYear();
+        const month = ('0' + (new Date(task.date).getMonth() + 1)).slice(-2);
+        const day = ('0' + (new Date(task.date).getDate() + 1)).slice(-2);
+        const stringDate = `${year}-${month}-${day}`;
 
-    task.year = year;
-    task.month = month;
-    task.day = day;
-    task.date = new Date(task.date).toLocaleDateString().replace(/\//g, "-");
-    task.date = stringDate;
-  });
-  tasks.sort((a, b) => a.day - b.day);
-  tasks.sort((a, b) => a.month - b.month);
-  tasks.sort((a, b) => a.year - b.year);
+        task.year = year;
+        task.month = month;
+        task.day = day;
+        task.date = new Date(task.date)
+            .toLocaleDateString()
+            .replace(/\//g, '-');
+        task.date = stringDate;
+    });
+    tasks.sort((a, b) => a.day - b.day);
+    tasks.sort((a, b) => a.month - b.month);
+    tasks.sort((a, b) => a.year - b.year);
 }
 
 function getNextTask(currentUsersTasks) {
-  const thisYear = new Date().getFullYear();
-  const thisMonth = new Date().getMonth() + 1;
-  const thisDay = new Date().getDate();
+    const thisYear = new Date().getFullYear();
+    const thisMonth = new Date().getMonth() + 1;
+    const thisDay = new Date().getDate();
 
-  const nextTasks = currentUsersTasks.filter((task) => {
-    if (!task.checked) {
-      if (task.year > thisYear) {
-        return task;
-      } else if ((task.year = this)) {
-        if (task.month > thisMonth) {
-          return task;
-        } else if ((task.month = thisMonth)) {
-          if (task.day > thisDay) {
-            return task;
-          }
+    const nextTasks = currentUsersTasks.filter((task) => {
+        if (!task.checked) {
+            if (task.year > thisYear) {
+                return task;
+            } else if ((task.year = this)) {
+                if (task.month > thisMonth) {
+                    return task;
+                } else if ((task.month = thisMonth)) {
+                    if (task.day > thisDay) {
+                        return task;
+                    }
+                }
+            }
         }
-      }
-    }
-  });
-  const nextTask = nextTasks[0];
+    });
+    const nextTask = nextTasks[0];
 
-  return nextTask;
+    return nextTask;
 }
 
 async function handleNewTask(ev) {
-  ev.preventDefault();
-  const userId = ev.target.baseURI.slice(-24);
-  let { color, title, description, urgency, location, date } =
-    ev.target.elements;
-  (color = color.value),
-    (title = title.value),
-    (description = description.value),
-    (urgency = urgency.value),
-    (location = location.value),
-    (date = date.value),
-    await axios
-      .post("/tasks/add-new-task", {
-        color,
-        title,
-        description,
-        urgency,
-        location,
-        date,
-        userId,
-      })
-      .then((response) => {
-        const { currentUsersTasks } = response.data;
-        renderTasks(currentUsersTasks, "RecentlyCreated");
-      });
+    ev.preventDefault();
+    const userId = ev.target.baseURI.slice(-24);
+    let { color, title, description, urgency, location, date } =
+        ev.target.elements;
+    (color = color.value),
+        (title = title.value),
+        (description = description.value),
+        (urgency = urgency.value),
+        (location = location.value),
+        (date = date.value),
+        await axios
+            .post('/tasks/add-new-task', {
+                color,
+                title,
+                description,
+                urgency,
+                location,
+                date,
+                userId
+            })
+            .then((response) => {
+                const { currentUsersTasks } = response.data;
+                renderTasks(currentUsersTasks, 'RecentlyCreated');
+            });
 }
 
 async function handleTaskUpdate(ev) {
-  ev.preventDefault();
-  const color = ev.target.elements.color.value;
-  const title = ev.target.elements.title.value;
-  const urgency = ev.target.elements.urgency.value;
-  const description = ev.target.elements.description.value;
-  const location = ev.target.elements.location.value;
-  const date = ev.target.elements.date.value;
-  const taskId = ev.target.elements.submit.dataset.id;
-  const userId = ev.target.baseURI.split("=")[1];
-  try {
-    const { data } = await axios.patch("/tasks/updated-task", {
-      _id: taskId,
-      ownerId: userId,
-      color,
-      title,
-      urgency,
-      description,
-      location,
-      date,
-    });
-    const { currentUsersTasks } = data;
-    renderTasks(currentUsersTasks, "RecentlyCreated");
-    closeTaskModal();
-  } catch (error) {
-    console.log("error in handleTaskUpdate");
-    console.log({ error: error.message });
-  }
+    ev.preventDefault();
+    const color = ev.target.elements.color.value;
+    const title = ev.target.elements.title.value;
+    const urgency = ev.target.elements.urgency.value;
+    const description = ev.target.elements.description.value;
+    const location = ev.target.elements.location.value;
+    const date = ev.target.elements.date.value;
+    const taskId = ev.target.elements.submit.dataset.id;
+    const userId = ev.target.baseURI.split('=')[1];
+    try {
+        const { data } = await axios.patch('/tasks/updated-task', {
+            _id: taskId,
+            ownerId: userId,
+            color,
+            title,
+            urgency,
+            description,
+            location,
+            date
+        });
+        const { currentUsersTasks } = data;
+        renderTasks(currentUsersTasks, 'RecentlyCreated');
+        closeTaskModal();
+    } catch (error) {
+        console.log('error in handleTaskUpdate');
+        console.log({ error: error.message });
+    }
 }
 
 async function handleTaskCheck(ev) {
-  try {
-    const timeChecked = new Date().toLocaleDateString().replace(/\//g, "-");
-    const taskId = ev.target.dataset.check;
+    try {
+        const timeChecked = new Date().toLocaleDateString().replace(/\//g, '-');
+        const taskId = ev.target.dataset.check;
 
-    
-    const userId = ev.target.baseURI.slice(-24);
-    const { data } = await axios.patch("/tasks/check-task", {
-      _id: taskId,
-      ownerId: userId,
-      timeChecked,
-    });
-    const { currentUsersTasks } = data;
+        const userId = ev.target.baseURI.slice(-24);
+        const { data } = await axios.patch('/tasks/check-task', {
+            _id: taskId,
+            ownerId: userId,
+            timeChecked
+        });
+        const { currentUsersTasks } = data;
 
-    
-    renderTasks(currentUsersTasks, "RecentlyCreated");
-  } catch (error) {
-    console.log("error in handleTaskCheck");
-    console.log({ error: error.message });
-  }
+        renderTasks(currentUsersTasks, 'RecentlyCreated');
+    } catch (error) {
+        console.log('error in handleTaskCheck');
+        console.log({ error: error.message });
+    }
 }
 
 async function handleTaskDelete(ev) {
-  const taskId = ev.target.dataset.delete;
-  const userURL = ev.target.baseURI;
+    const taskId = ev.target.dataset.delete;
+    const userURL = ev.target.baseURI;
 
-  try {
-    const { data } = await axios.delete("/tasks/delete-task", {
-      data: { taskId, userURL },
-    });
-    const { currentUsersTasks, currentPage } = data;
-    renderTasks(currentUsersTasks, currentPage);
-  } catch (error) {
-    console.log("error in handleTaskDelete");
-    console.log({ error: error.message });
-  }
+    try {
+        const { data } = await axios.delete('/tasks/delete-task', {
+            data: { taskId, userURL }
+        });
+        const { currentUsersTasks, currentPage } = data;
+        renderTasks(currentUsersTasks, currentPage);
+    } catch (error) {
+        console.log('error in handleTaskDelete');
+        console.log({ error: error.message });
+    }
 }
 
 async function handleColor(ev) {
-  const newColor = ev.target.value;
-  const formField = document.querySelector("#landing__task-next");
-  formField.style.backgroundColor = newColor;
+    const newColor = ev.target.value;
+    const formField = document.querySelector<HTMLElement>(
+        '#landing__task-next'
+    );
+    formField.style.backgroundColor = newColor;
 }
 
 // task update modal:
 
 async function openTaskModal(modal) {
-  if (modal == null) return;
-  modal.classList.add("active");
-  overlay.classList.add("active");
+    if (modal == null) return;
+    modal.classList.add('active');
+    overlay.classList.add('active');
 }
 function closeTaskModal() {
-  const modal = document.querySelector(".taskModal");
-  if (modal == null) return;
-  modal.classList.remove("active");
-  overlay.classList.remove("active");
+    const modal = document.querySelector('.taskModal');
+    if (modal == null) return;
+    modal.classList.remove('active');
+    overlay.classList.remove('active');
 }
 
 async function renderTaskModal(ev) {
-  const taskId = ev.target.dataset.id;
-  const modal = document.querySelector(".taskModal");
+    const taskId = ev.target.dataset.id;
+    const modal = document.querySelector('.taskModal');
 
-  // const overlay = document.querySelector("[data-taskModal-overlay]");
-  let html = "";
-  try {
-    const { data } = await axios.post("/tasks/task", { taskId: taskId });
-    const currentTask = data;
-    if (!currentTask) throw new Error("no task in the modal");
-    currentTask.date = currentTask.date.slice(0, 10);
-    html += `
+    // const overlay = document.querySelector("[data-taskModal-overlay]");
+    let html = '';
+    try {
+        const { data } = await axios.post('/tasks/task', { taskId: taskId });
+        const currentTask = data;
+        if (!currentTask) throw new Error('no task in the modal');
+        currentTask.date = currentTask.date.slice(0, 10);
+        html += `
 <div class="taskModal-header">
 <h1>${currentTask.title}</h1>
 <button onclick="closeTaskModal()" class="taskModal-closeButton"> &times; </button>
@@ -674,10 +662,10 @@ async function renderTaskModal(ev) {
 <input data-id="${currentTask._id}" type="submit" name="submit" id="submit" value="Update this task">
 </form>
 <div onclick="closeTaskModal()" data-taskModal-overlay class="overlay"></div>`;
-    modal.innerHTML = html;
-    openTaskModal(modal);
-  } catch (error) {
-    console.log(error.message);
-    console.log(error);
-  }
+        modal.innerHTML = html;
+        openTaskModal(modal);
+    } catch (error) {
+        console.log(error.message);
+        console.log(error);
+    }
 }

@@ -88,7 +88,9 @@ exports.login = function (req, res) { return __awaiter(void 0, void 0, void 0, f
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 9, , 10]);
-                return [4 /*yield*/, userModel_1["default"].findOne({ email: email }).collation({ locale: 'en_US', strength: 1 })];
+                return [4 /*yield*/, userModel_1["default"]
+                        .findOne({ email: email })
+                        .collation({ locale: 'en_US', strength: 1 })];
             case 2:
                 currentLogin = _b.sent();
                 if (!currentLogin) return [3 /*break*/, 7];
