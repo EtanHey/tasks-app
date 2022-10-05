@@ -24,9 +24,9 @@ mongoose_1.default
 });
 // app.post('/show-user'), async (req, res) => {
 // }
-const userRoutes_1 = __importDefault(require("./routes/dist/userRoutes"));
+const userRoutes_1 = __importDefault(require("./routes/dist/userRoutes.cjs"));
 app.use('/users', userRoutes_1.default);
-const taskRoutes_1 = __importDefault(require("./routes/dist/taskRoutes"));
+const taskRoutes_1 = __importDefault(require("./routes/dist/taskRoutes.cjs"));
 app.use('/tasks', taskRoutes_1.default);
 app.listen(port, () => {
     return console.log(`Server is listening at http://localhost:${port}`);

@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 exports.updateUser = exports.passwordCheck = exports.renderPage = exports.renderUser = exports.login = exports.addUser = void 0;
-var userModel_1 = require("../model/userModel");
+var userModel_1 = require("../model/dist/userModel");
 var jwt_simple_1 = require("jwt-simple");
 var secret = process.env.JWT_SECRET;
 exports.addUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {

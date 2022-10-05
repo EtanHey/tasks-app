@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 exports.getUrgencies = exports.getTask = exports.deleteTask = exports.checkTask = exports.updateTask = exports.addNewTask = exports.getUsersTasks = void 0;
-var taskModel_1 = require("../model/taskModel");
+var taskModel_1 = require("../model/dist/taskModel");
 exports.getUsersTasks = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var ownerId, currentUsersTasks;
     return __generator(this, function (_a) {
