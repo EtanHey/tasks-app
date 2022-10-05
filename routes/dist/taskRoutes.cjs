@@ -2,7 +2,7 @@
 exports.__esModule = true;
 var express = require("express");
 var router = express.Router();
-var taskCont_1 = require("../controller/dist/taskCont");
+var taskCont_1 = require("../../controller/dist/taskCont");
 router
     .get('/getTasks', taskCont_1.getUsersTasks)
     .post('/add-new-task', taskCont_1.addNewTask)
