@@ -21,9 +21,9 @@ mongoose_1.default
 });
 // app.post('/show-user'), async (req, res) => {
 // }
-var userRoutes_1 = require("../routes/userRoutes");
+var userRoutes_1 = require("./routes/userRoutes");
 app.use('/users', userRoutes_1.default);
-var taskRoutes_1 = require("../routes/taskRoutes");
+var taskRoutes_1 = require("./routes/taskRoutes");
 app.use('/tasks', taskRoutes_1.default);
 app.listen(port, function () {
     return console.log("Server is listening at http://localhost:".concat(port));
