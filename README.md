@@ -1,16 +1,20 @@
 # tasks-app
+
 mongoDB vanilla ts tasks app
-
-
-npm i (may need body-parser);
 
 open .env file, with:
 
-1)JWT_SECRET={your choice of some letters, no spaces, no apostrophes ("/')}
+1) JWT_SECRET={your choice of some letters, no spaces, no apostrophes ("/')}
 
-2)MONGODB_URI={your mongoDB connection link};
+2) MONGODB_URI={your mongoDB connection link}
 
-turn on live server, and head over to: `http://localhost:3000/`
+open a terminal window and:
+
+1. npm i (may need body-parser)
+
+2. nodemon
+
+head over to: `http://localhost:3000/`
 
 sign up.
 
