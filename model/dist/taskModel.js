@@ -12,5 +12,5 @@ var TaskSchema = new mongoose_1["default"].Schema({
     checked: Boolean,
     timeChecked: String
 });
-var task = mongoose_1["default"].model("tasks", TaskSchema);
+var task = mongoose_1["default"].model('tasks', TaskSchema);
 exports["default"] = task;

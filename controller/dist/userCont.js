@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 exports.updateUser = exports.passwordCheck = exports.renderPage = exports.renderUser = exports.login = exports.addUser = void 0;
-var userModel_1 = require("../model/dist/userModel");
+var userModel_1 = require("../model/userModel");
 var jwt_simple_1 = require("jwt-simple");
 var secret = process.env.JWT_SECRET;
 exports.addUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
@@ -88,9 +88,7 @@ exports.login = function (req, res) { return __awaiter(void 0, void 0, void 0, f
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 9, , 10]);
-                return [4 /*yield*/, userModel_1["default"]
-                        .findOne({ email: email })
-                        .collation({ locale: "en_US", strength: 1 })];
+                return [4 /*yield*/, userModel_1["default"].findOne({ email: email }).collation({ locale: 'en_US', strength: 1 })];
             case 2:
                 currentLogin = _b.sent();
                 if (!currentLogin) return [3 /*break*/, 7];
@@ -115,7 +113,7 @@ exports.login = function (req, res) { return __awaiter(void 0, void 0, void 0, f
                     userRole = userVerification.role;
                     payload = { userId: userId, userRole: userRole };
                     information = jwt_simple_1["default"].encode(payload, secret);
-                    res.cookie("currentUser", information, {});
+                    res.cookie('currentUser', information, {});
                     res.send({ ok: true, currentLogin: currentLogin, verifiedUser: verifiedUser, userId: userId });
                     return [2 /*return*/];
                 }
@@ -130,7 +128,7 @@ exports.login = function (req, res) { return __awaiter(void 0, void 0, void 0, f
             case 8: return [3 /*break*/, 10];
             case 9:
                 error_2 = _b.sent();
-                console.log("error in login:");
+                console.log('error in login:');
                 console.log(error_2.message);
                 res.send({ error: error_2.message });
                 return [3 /*break*/, 10];
@@ -160,14 +158,14 @@ exports.renderPage = function (req, res) { return __awaiter(void 0, void 0, void
         switch (_c.label) {
             case 0:
                 _a = req.body, userURL = _a.userURL, requestedPage = _a.requestedPage;
-                appURL = userURL.split("/")[2];
+                appURL = userURL.split('/')[2];
                 userId = userURL.slice(-24);
                 return [4 /*yield*/, userModel_1["default"].find({ _id: userId })];
             case 1:
                 currentUser = _c.sent();
                 newURL = "/" + requestedPage + ".html?id=" + userId;
                 _b = currentUser[0], firstName = _b.firstName, lastName = _b.lastName, gender = _b.gender, role = _b.role, email = _b.email, password = _b.password;
-                if (requestedPage === "home") {
+                if (requestedPage === 'home') {
                     try {
                         res.send({
                             firstName: firstName,
@@ -178,14 +176,14 @@ exports.renderPage = function (req, res) { return __awaiter(void 0, void 0, void
                         });
                     }
                     catch (error) {
-                        console.log("error in renderPage: home");
+                        console.log('error in renderPage: home');
                         console.log(error.message);
                         res.send({ error: error.message });
                         // }
                     }
                     return [2 /*return*/];
                 }
-                if (requestedPage === "settings") {
+                if (requestedPage === 'settings') {
                     try {
                         res.send({
                             firstName: firstName,
@@ -198,35 +196,35 @@ exports.renderPage = function (req, res) { return __awaiter(void 0, void 0, void
                         });
                     }
                     catch (error) {
-                        console.log("error in renderPage: settings");
+                        console.log('error in renderPage: settings');
                         console.log(error.message);
                         res.send({ error: error.message });
                         // }
                     }
                     return [2 /*return*/];
                 }
-                if (requestedPage === "info") {
+                if (requestedPage === 'info') {
                     try {
                         res.send({
                             newURL: newURL
                         });
                     }
                     catch (error) {
-                        console.log("error in renderPage: info");
+                        console.log('error in renderPage: info');
                         console.log(error.message);
                         res.send({ error: error.message });
                         // }
                     }
                     return [2 /*return*/];
                 }
-                if (requestedPage === "RecentlyCreated") {
+                if (requestedPage === 'RecentlyCreated') {
                     try {
                         res.send({
                             newURL: newURL
                         });
                     }
                     catch (error) {
-                        console.log("error in renderPage: RecentlyCreated");
+                        console.log('error in renderPage: RecentlyCreated');
                         console.log(error.message);
                         res.send({ error: error.message });
                         // }
@@ -254,7 +252,7 @@ exports.passwordCheck = function (req, res) { return __awaiter(void 0, void 0, v
                 return [3 /*break*/, 3];
             case 2:
                 error_3 = _b.sent();
-                console.log("error in renderPage: RecentlyCreated");
+                console.log('error in renderPage: RecentlyCreated');
                 console.log(error_3.message);
                 res.send({ error: error_3.message });
                 return [3 /*break*/, 3];
@@ -295,7 +293,7 @@ exports.updateUser = function (req, res) { return __awaiter(void 0, void 0, void
                 return [3 /*break*/, 6];
             case 5:
                 error_4 = _b.sent();
-                console.log("error in updateUser");
+                console.log('error in updateUser');
                 console.log(error_4.message);
                 res.send({ error: error_4.message });
                 return [3 /*break*/, 6];

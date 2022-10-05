@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 exports.getUrgencies = exports.getTask = exports.deleteTask = exports.checkTask = exports.updateTask = exports.addNewTask = exports.getUsersTasks = void 0;
-var taskModel_1 = require("../model/dist/taskModel");
+var taskModel_1 = require("../model/taskModel");
 exports.getUsersTasks = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var ownerId, currentUsersTasks;
     return __generator(this, function (_a) {
@@ -59,13 +59,7 @@ exports.addNewTask = function (req, res) { return __awaiter(void 0, void 0, void
             case 0:
                 _e.trys.push([0, 4, , 5]);
                 _a = req.body, color = _a.color, title = _a.title, description = _a.description, urgency = _a.urgency, location = _a.location, date = _a.date, userId = _a.userId;
-                if (!(userId &&
-                    color &&
-                    title &&
-                    description &&
-                    urgency &&
-                    location &&
-                    date)) return [3 /*break*/, 3];
+                if (!(userId && color && title && description && urgency && location && date)) return [3 /*break*/, 3];
                 newTask = new taskModel_1["default"]({
                     color: color,
                     title: title,
@@ -172,8 +166,8 @@ exports.deleteTask = function (req, res) { return __awaiter(void 0, void 0, void
             case 0:
                 _b.trys.push([0, 3, , 4]);
                 _a = req.body, taskId = _a.taskId, userURL = _a.userURL;
-                userId = userURL.split("=")[1];
-                currentPage = userURL.split("/")[3].split(".")[0];
+                userId = userURL.split('=')[1];
+                currentPage = userURL.split('/')[3].split('.')[0];
                 return [4 /*yield*/, taskModel_1["default"].findOneAndDelete({ _id: taskId, ownerId: userId })];
             case 1:
                 _b.sent();

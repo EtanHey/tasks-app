@@ -9,5 +9,5 @@ var UserSchema = new mongoose_1["default"].Schema({
     lastName: String,
     gender: String
 });
-var user = mongoose_1["default"].model("users", UserSchema);
+var user = mongoose_1["default"].model('users', UserSchema);
 exports["default"] = user;

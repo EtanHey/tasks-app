@@ -16,7 +16,7 @@ export const addUser = async (req, res) => {
                     email,
                     password,
                     role,
-                    gender,
+                    gender
                 });
 
                 const result = await newUser.save();
@@ -40,12 +40,12 @@ export const login = async (req, res) => {
             const userEmail = await currentLogin.email;
             const userVerification: any = await user.findOne({
                 email: userEmail,
-                password: password,
+                password: password
             });
             if (userVerification) {
                 const verifiedUser: any = await user.find({
                     email: userEmail,
-                    password: password,
+                    password: password
                 });
 
                 if (verifiedUser.length === 1) {
@@ -100,7 +100,7 @@ export const renderPage = async (req, res) => {
                 lastName: lastName,
                 gender: gender,
                 role: role,
-                newURL: newURL,
+                newURL: newURL
             });
         } catch (error) {
             console.log('error in renderPage: home');
@@ -121,7 +121,7 @@ export const renderPage = async (req, res) => {
                 role: role,
                 email: email,
                 password: password,
-                newURL: newURL,
+                newURL: newURL
             });
         } catch (error) {
             console.log('error in renderPage: settings');
@@ -136,7 +136,7 @@ export const renderPage = async (req, res) => {
     if (requestedPage === 'info') {
         try {
             res.send({
-                newURL: newURL,
+                newURL: newURL
             });
         } catch (error) {
             console.log('error in renderPage: info');
@@ -151,7 +151,7 @@ export const renderPage = async (req, res) => {
     if (requestedPage === 'RecentlyCreated') {
         try {
             res.send({
-                newURL: newURL,
+                newURL: newURL
             });
         } catch (error) {
             console.log('error in renderPage: RecentlyCreated');
@@ -170,7 +170,7 @@ export const passwordCheck = async (req, res) => {
 
         const isRightPassword = await user.find({
             _id: userId,
-            password: password,
+            password: password
         });
         res.send({isRightPassword});
     } catch (error) {
@@ -193,7 +193,7 @@ export const updateUser = async (req, res) => {
                 email: emailUpdate,
                 gender: genderUpdate,
                 role: roleUpdate,
-                password: passwordUpdate,
+                password: passwordUpdate
             }
         );
         const updateStatus = await updateUser.matchedCount;
