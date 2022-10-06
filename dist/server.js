@@ -22,8 +22,6 @@ mongoose_1.default
     console.log('Failed to connect to Mongoose:');
     console.log(err.message);
 });
-// app.post('/show-user'), async (req, res) => {
-// }
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 app.use('/users', userRoutes_1.default);
 const taskRoutes_1 = __importDefault(require("./routes/taskRoutes"));

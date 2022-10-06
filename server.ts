@@ -22,9 +22,6 @@ mongoose
         console.log(err.message);
     });
 
-// app.post('/show-user'), async (req, res) => {
-
-// }
 
 import userRoutes from './routes/userRoutes';
 app.use('/users', userRoutes);
