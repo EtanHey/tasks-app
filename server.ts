@@ -1,6 +1,6 @@
-import express from 'express';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
+const express = require('express');
 
 require('dotenv').config();
 
