@@ -1,4 +1,4 @@
-import express from 'express';
+import express = require('express');
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 
@@ -21,7 +21,6 @@ mongoose
         console.log('Failed to connect to Mongoose:');
         console.log(err.message);
     });
-
 
 import userRoutes from './routes/userRoutes';
 app.use('/users', userRoutes);
