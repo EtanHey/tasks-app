@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 
 require('dotenv').config();
-
+const os = require('os');
 const uri = process.env.MONGODB_URI;
 const app = express();
 const port = process.env.PORT || 3000;
@@ -15,6 +15,8 @@ mongoose
     .connect(uri)
 
     .then(() => {
+        console.log('here');
+        console.log(os.hostname());
         console.log('connected to Mongoose');
     })
     .catch((err) => {

@@ -7,6 +7,7 @@ const express = require("express");
 const mongoose_1 = __importDefault(require("mongoose"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 require('dotenv').config();
+const os = require('os');
 const uri = process.env.MONGODB_URI;
 const app = express();
 const port = process.env.PORT || 3000;
@@ -16,6 +17,8 @@ app.use(cookie_parser_1.default());
 mongoose_1.default
     .connect(uri)
     .then(() => {
+    console.log('here');
+    console.log(os.hostname());
     console.log('connected to Mongoose');
 })
     .catch((err) => {
