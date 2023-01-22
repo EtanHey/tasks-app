@@ -9,6 +9,5 @@
         "alwaysStrict": true,
         "importHelpers": false
     },
-    "lib": ["es2015"],
-    "files": ["server.ts"]
+    "lib": ["es2015"]
 }
