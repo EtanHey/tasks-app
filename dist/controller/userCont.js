@@ -48,7 +48,9 @@ exports.addUser = addUser;
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { email, password } = req.body;
     try {
-        const currentLogin = yield userModel_1.default.findOne({ email: email }).collation({ locale: 'en_US', strength: 1 });
+        const currentLogin = yield userModel_1.default
+            .findOne({ email: email })
+            .collation({ locale: 'en_US', strength: 1 });
         if (currentLogin) {
             const userEmail = yield currentLogin.email;
             const userVerification = yield userModel_1.default.findOne({

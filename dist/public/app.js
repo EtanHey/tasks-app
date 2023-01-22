@@ -3,7 +3,6 @@
 const text = document.querySelector(".fancy");
 const strText = text.textContent;
 const splitText = strText.split("");
-console.log(splitText);
 text.textContent = "";
 splitText.forEach(i => {
     text.innerHTML += '<span>' + `${i}` + '</span>';
@@ -43,7 +42,7 @@ overlay.addEventListener("click", () => {
     const modals = document.querySelectorAll(".modal.active");
     modals.forEach((modal) => {
         closeModal(modal);
-        closeTaskModal();
+        // closeTaskModal()
     });
 });
 closeModalButttons.forEach((button) => {

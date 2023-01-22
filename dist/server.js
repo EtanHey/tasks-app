@@ -12,7 +12,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 app.use(express.static('public'));
 app.use(express.json());
-app.use(cookie_parser_1.default());
+app.use((0, cookie_parser_1.default)());
 mongoose_1.default
     .connect(uri)
     .then(() => {
@@ -29,3 +29,4 @@ app.use('/tasks', taskRoutes_1.default);
 app.listen(port, () => {
     return console.log(`Server is listening at http://localhost:${port}`);
 });
+//# sourceMappingURL=server.js.map
