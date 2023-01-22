@@ -1,3 +1,5 @@
+import axios from "axios";
+
 async function handleRegister(ev) {
     ev.preventDefault();
     const registerStatus = document.querySelector('[data-register-status]');

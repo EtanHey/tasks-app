@@ -8,6 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const axios_1 = __importDefault(require("axios"));
 function handleRegister(ev) {
     return __awaiter(this, void 0, void 0, function* () {
         ev.preventDefault();
@@ -19,7 +24,7 @@ function handleRegister(ev) {
         password = password.value;
         role = role.value;
         gender = gender.value;
-        const { data } = yield axios.post('/users/add-user', {
+        const { data } = yield axios_1.default.post('/users/add-user', {
             firstName,
             lastName,
             email,
@@ -46,7 +51,7 @@ function handleLogin(ev) {
             password: password
         };
         try {
-            const { data } = yield axios.post('/users/log-in', userData);
+            const { data } = yield axios_1.default.post('/users/log-in', userData);
             const { ok, aUser, userId } = data;
             const verifiedUserId = userId;
             passwordStatus.style.color = '';
@@ -78,7 +83,7 @@ function handleRenderHome(ev) {
         ev.preventDefault();
         const currentPage = ev.target.title;
         let userId = ev.target.location.search.replace(/.*?id=/g, '');
-        const { data } = yield axios.get(`users/logged-in-user?userId=${userId}`);
+        const { data } = yield axios_1.default.get(`users/logged-in-user?userId=${userId}`);
         const { userInfo } = data;
         getUsersTasks(userId, currentPage);
         const user = userInfo[0];
@@ -105,7 +110,7 @@ function handleRenderHome(ev) {
 }
 function handleGetUrgencies(userId) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { data } = yield axios.get(`tasks/get-urgencies?userId=${userId}`);
+        const { data } = yield axios_1.default.get(`tasks/get-urgencies?userId=${userId}`);
         const { lowUrgency, mediumUrgency, highUrgency } = data;
         let arr = [lowUrgency, mediumUrgency, highUrgency];
         return arr;
@@ -116,7 +121,7 @@ function handleRenderRecentlyCreated(ev) {
         ev.preventDefault();
         const currentPage = ev.target.title.split(' ').join('');
         let userId = ev.target.location.search.replace(/.*?id=/g, '');
-        const { data } = yield axios.get(`users/logged-in-user?userId=${userId}`);
+        const { data } = yield axios_1.default.get(`users/logged-in-user?userId=${userId}`);
         getUsersTasks(userId, currentPage);
     });
 }
@@ -126,7 +131,7 @@ function handleRenderSettings(ev) {
         const currentPage = ev.target.title;
         let userId = ev.target.location.search.replace(/.*?id=/g, '');
         const settingsForm = document.querySelector('[data-settings]');
-        const { data } = yield axios.get(`users/logged-in-user?userId=${userId}`);
+        const { data } = yield axios_1.default.get(`users/logged-in-user?userId=${userId}`);
         const { userInfo } = data;
         let html = '';
         const user = userInfo[0];
@@ -187,7 +192,7 @@ function handleUserUpdate(ev) {
             const passwordConfirmation = (_g = ev.target.elements.passwordConfirmation) === null || _g === void 0 ? void 0 : _g.value;
             // const isRightPassword = await handlePasswordCheck(passwordConfirmation, userId)
             // if(isRightPassword){
-            const { data } = yield axios.patch(`/users/settings`, {
+            const { data } = yield axios_1.default.patch(`/users/settings`, {
                 firstNameUpdate,
                 lastNameUpdate,
                 emailUpdate,
@@ -219,7 +224,7 @@ function handleUserUpdate(ev) {
 }
 function handlePasswordCheck(password, userId) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { data } = yield axios.post(`/users/passwordCheck`, {
+        const { data } = yield axios_1.default.post(`/users/passwordCheck`, {
             password,
             userId
         });
@@ -237,7 +242,7 @@ function handlePageChange(ev) {
         const requestedPage = ev.target.outerText.split(' ').join('');
         try {
             if (requestedPage === 'home') {
-                const { data } = yield axios.post(`/users/nav`, {
+                const { data } = yield axios_1.default.post(`/users/nav`, {
                     userURL,
                     requestedPage
                 });
@@ -245,7 +250,7 @@ function handlePageChange(ev) {
                 window.location.href = newURL;
             }
             if (requestedPage === 'settings') {
-                const { data } = yield axios.post(`/users/nav`, {
+                const { data } = yield axios_1.default.post(`/users/nav`, {
                     userURL,
                     requestedPage
                 });
@@ -253,7 +258,7 @@ function handlePageChange(ev) {
                 window.location.href = newURL;
             }
             if (requestedPage === 'info') {
-                const { data } = yield axios.post(`/users/nav`, {
+                const { data } = yield axios_1.default.post(`/users/nav`, {
                     userURL,
                     requestedPage
                 });
@@ -261,7 +266,7 @@ function handlePageChange(ev) {
                 window.location.href = newURL;
             }
             if (requestedPage === 'RecentlyCreated') {
-                const { data } = yield axios.post(`/users/nav`, {
+                const { data } = yield axios_1.default.post(`/users/nav`, {
                     userURL,
                     requestedPage
                 });
@@ -279,7 +284,7 @@ function handlePageChange(ev) {
 function getUsersTasks(userId, currentPage) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { data } = yield axios.get(`tasks/getTasks?ownerId=${userId}`);
+            const { data } = yield axios_1.default.get(`tasks/getTasks?ownerId=${userId}`);
             const currentUsersTasks = data;
             renderTasks(currentUsersTasks, currentPage);
         }
@@ -498,7 +503,7 @@ function handleNewTask(ev) {
             (urgency = urgency.value),
             (location = location.value),
             (date = date.value),
-            yield axios
+            yield axios_1.default
                 .post('/tasks/add-new-task', {
                 color,
                 title,
@@ -526,7 +531,7 @@ function handleTaskUpdate(ev) {
         const taskId = ev.target.elements.submit.dataset.id;
         const userId = ev.target.baseURI.split('=')[1];
         try {
-            const { data } = yield axios.patch('/tasks/updated-task', {
+            const { data } = yield axios_1.default.patch('/tasks/updated-task', {
                 _id: taskId,
                 ownerId: userId,
                 color,
@@ -552,7 +557,7 @@ function handleTaskCheck(ev) {
             const timeChecked = new Date().toLocaleDateString().replace(/\//g, '-');
             const taskId = ev.target.dataset.check;
             const userId = ev.target.baseURI.slice(-24);
-            const { data } = yield axios.patch('/tasks/check-task', {
+            const { data } = yield axios_1.default.patch('/tasks/check-task', {
                 _id: taskId,
                 ownerId: userId,
                 timeChecked
@@ -571,7 +576,7 @@ function handleTaskDelete(ev) {
         const taskId = ev.target.dataset.delete;
         const userURL = ev.target.baseURI;
         try {
-            const { data } = yield axios.delete('/tasks/delete-task', {
+            const { data } = yield axios_1.default.delete('/tasks/delete-task', {
                 data: { taskId, userURL }
             });
             const { currentUsersTasks, currentPage } = data;
@@ -613,7 +618,7 @@ function renderTaskModal(ev) {
         // const overlay = document.querySelector("[data-taskModal-overlay]");
         let html = '';
         try {
-            const { data } = yield axios.post('/tasks/task', { taskId: taskId });
+            const { data } = yield axios_1.default.post('/tasks/task', { taskId: taskId });
             const currentTask = data;
             if (!currentTask)
                 throw new Error('no task in the modal');
