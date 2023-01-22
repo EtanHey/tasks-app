@@ -8,6 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const axios_1 = __importDefault(require("axios"));
 function handleRegister(ev) {
     return __awaiter(this, void 0, void 0, function* () {
         ev.preventDefault();
@@ -19,13 +24,13 @@ function handleRegister(ev) {
         password = password.value;
         role = role.value;
         gender = gender.value;
-        const { data } = yield axios.post("/users/add-user", {
+        const { data } = yield axios_1.default.post('/users/add-user', {
             firstName,
             lastName,
             email,
             password,
             role,
-            gender,
+            gender
         });
         const { aUser } = data;
         if (aUser) {
@@ -43,12 +48,11 @@ function handleLogin(ev) {
         const password = ev.target.elements.password.value;
         const userData = {
             email: email,
-            password: password,
+            password: password
         };
         try {
-            const { data } = yield axios
-                .post("/users/log-in", userData);
-            const { ok, aUser, verifiedUser, userId } = data;
+            const { data } = yield axios_1.default.post('/users/log-in', userData);
+            const { ok, aUser, userId } = data;
             const verifiedUserId = userId;
             passwordStatus.style.color = '';
             passwordStatus.innerHTML = '';
@@ -61,14 +65,14 @@ function handleLogin(ev) {
                 return;
             }
             if (!ok)
-                throw new Error("no ok");
+                throw new Error('no ok');
             if (ok) {
                 window.location.href = `/home.html?id=${verifiedUserId}`;
             }
             return;
         }
         catch (error) {
-            console.log("error in handleLogin:");
+            console.log('error in handleLogin:');
             console.log(error.message);
             // }
         }
@@ -78,13 +82,13 @@ function handleRenderHome(ev) {
     return __awaiter(this, void 0, void 0, function* () {
         ev.preventDefault();
         const currentPage = ev.target.title;
-        let userId = ev.target.location.search.replace(/.*?id=/g, "");
-        const { data } = yield axios.get(`users/logged-in-user?userId=${userId}`);
-        const { userInfo, decoded } = data;
+        let userId = ev.target.location.search.replace(/.*?id=/g, '');
+        const { data } = yield axios_1.default.get(`users/logged-in-user?userId=${userId}`);
+        const { userInfo } = data;
         getUsersTasks(userId, currentPage);
         const user = userInfo[0];
-        const name = document.querySelector("[data-name]");
-        const gender = document.querySelector("[data-gender]");
+        const name = document.querySelector('[data-name]');
+        const gender = document.querySelector('[data-gender]');
         name.innerHTML = `${user.firstName} ${user.lastName}<br><span>${user.role}</span>`;
         if (user.gender === `male`) {
             gender.src = `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ51Gk5jjB4qD-BkcDh_fhsE4HkfnLDblQPrQLaOY13u7v5MNoBea8JzZ5NZAa0G-gAcgY&usqp=CAU`;
@@ -92,9 +96,9 @@ function handleRenderHome(ev) {
         else {
             gender.src = `https://static.vecteezy.com/system/resources/thumbnails/002/586/938/small/woman-cartoon-character-portrait-brunette-female-round-line-icon-free-vector.jpg`;
         }
-        const lowTasks = document.querySelector("[data-low]");
-        const mediumTasks = document.querySelector("[data-medium]");
-        const highTasks = document.querySelector("[data-high]");
+        const lowTasks = document.querySelector('[data-low]');
+        const mediumTasks = document.querySelector('[data-medium]');
+        const highTasks = document.querySelector('[data-high]');
         const arr = yield Promise.all([handleGetUrgencies(userId)]);
         const low = arr[0][0];
         lowTasks.innerHTML = low.length;
@@ -106,7 +110,7 @@ function handleRenderHome(ev) {
 }
 function handleGetUrgencies(userId) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { data } = yield axios.get(`tasks/get-urgencies?userId=${userId}`);
+        const { data } = yield axios_1.default.get(`tasks/get-urgencies?userId=${userId}`);
         const { lowUrgency, mediumUrgency, highUrgency } = data;
         let arr = [lowUrgency, mediumUrgency, highUrgency];
         return arr;
@@ -115,9 +119,9 @@ function handleGetUrgencies(userId) {
 function handleRenderRecentlyCreated(ev) {
     return __awaiter(this, void 0, void 0, function* () {
         ev.preventDefault();
-        const currentPage = ev.target.title.split(" ").join("");
-        let userId = ev.target.location.search.replace(/.*?id=/g, "");
-        const { data } = yield axios.get(`users/logged-in-user?userId=${userId}`);
+        const currentPage = ev.target.title.split(' ').join('');
+        let userId = ev.target.location.search.replace(/.*?id=/g, '');
+        const { data } = yield axios_1.default.get(`users/logged-in-user?userId=${userId}`);
         getUsersTasks(userId, currentPage);
     });
 }
@@ -125,11 +129,11 @@ function handleRenderSettings(ev) {
     return __awaiter(this, void 0, void 0, function* () {
         ev.preventDefault();
         const currentPage = ev.target.title;
-        let userId = ev.target.location.search.replace(/.*?id=/g, "");
-        const settingsForm = document.querySelector("[data-settings]");
-        const { data } = yield axios.get(`users/logged-in-user?userId=${userId}`);
+        let userId = ev.target.location.search.replace(/.*?id=/g, '');
+        const settingsForm = document.querySelector('[data-settings]');
+        const { data } = yield axios_1.default.get(`users/logged-in-user?userId=${userId}`);
         const { userInfo } = data;
-        let html = "";
+        let html = '';
         const user = userInfo[0];
         html = `<form name="userUpdate" id="userUpdate" onsubmit="handleUserUpdate(event)">
   <h1>Update Your information</h1>
@@ -178,7 +182,7 @@ function handleUserUpdate(ev) {
         ev.preventDefault();
         try {
             const userId = ev.target.baseURI.slice(-24);
-            const passwordStatus = document.querySelector("[data-password-status]");
+            const passwordStatus = document.querySelector('[data-password-status]');
             const firstNameUpdate = (_a = ev.target.elements.firstNameUpdate) === null || _a === void 0 ? void 0 : _a.value;
             const lastNameUpdate = (_b = ev.target.elements.lastNameUpdate) === null || _b === void 0 ? void 0 : _b.value;
             const emailUpdate = (_c = ev.target.elements.emailUpdate) === null || _c === void 0 ? void 0 : _c.value;
@@ -188,8 +192,7 @@ function handleUserUpdate(ev) {
             const passwordConfirmation = (_g = ev.target.elements.passwordConfirmation) === null || _g === void 0 ? void 0 : _g.value;
             // const isRightPassword = await handlePasswordCheck(passwordConfirmation, userId)
             // if(isRightPassword){
-            const { data } = axios
-                .patch(`/users/settings`, {
+            const { data } = yield axios_1.default.patch(`/users/settings`, {
                 firstNameUpdate,
                 lastNameUpdate,
                 emailUpdate,
@@ -197,20 +200,18 @@ function handleUserUpdate(ev) {
                 roleUpdate,
                 passwordUpdate,
                 passwordConfirmation,
-                userId,
-            })
-                .then((data) => {
-                const { updatedUser, updateStatus } = data.data;
-                passwordStatus.style.color = ``;
-                if (updatedUser === undefined) {
-                    passwordStatus.style.color = 'red';
-                    passwordStatus.innerHTML = `*You Either put in the wrong password or no password at all, TRY AGAIN!`;
-                    return;
-                }
-                if (updateStatus === undefined) {
-                    passwordStatus.innerHTML = `<h2>Your Inxrformation was updated successfully</h2>`;
-                }
+                userId
             });
+            const { updatedUser, updateStatus } = data;
+            passwordStatus.style.color = ``;
+            if (updatedUser === undefined) {
+                passwordStatus.style.color = 'red';
+                passwordStatus.innerHTML = `*You Either put in the wrong password or no password at all, TRY AGAIN!`;
+                return;
+            }
+            if (updateStatus === undefined) {
+                passwordStatus.innerHTML = `<h2>Your Inxrformation was updated successfully</h2>`;
+            }
             // const {updatedUser} = data;
             // }else{
             // }
@@ -223,9 +224,9 @@ function handleUserUpdate(ev) {
 }
 function handlePasswordCheck(password, userId) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { data } = yield axios.post(`/users/passwordCheck`, {
+        const { data } = yield axios_1.default.post(`/users/passwordCheck`, {
             password,
-            userId,
+            userId
         });
         const { isRightPassword } = data;
         if (isRightPassword.length > 0) {
@@ -238,45 +239,43 @@ function handlePasswordCheck(password, userId) {
 function handlePageChange(ev) {
     return __awaiter(this, void 0, void 0, function* () {
         const userURL = ev.target.baseURI;
-        const requestedPage = ev.target.outerText.split(" ").join("");
+        const requestedPage = ev.target.outerText.split(' ').join('');
         try {
-            if (requestedPage === "home") {
-                const { data } = yield axios
-                    .post(`/users/nav`, { userURL, requestedPage })
-                    .then((response) => {
-                    const { newURL } = response.data;
-                    window.location.href = newURL;
-                });
-            }
-            if (requestedPage === "settings") {
-                const { data } = yield axios.post(`/users/nav`, {
+            if (requestedPage === 'home') {
+                const { data } = yield axios_1.default.post(`/users/nav`, {
                     userURL,
-                    requestedPage,
+                    requestedPage
                 });
                 const { newURL } = data;
                 window.location.href = newURL;
             }
-            if (requestedPage === "info") {
-                const { data } = yield axios.post(`/users/nav`, {
+            if (requestedPage === 'settings') {
+                const { data } = yield axios_1.default.post(`/users/nav`, {
                     userURL,
-                    requestedPage,
+                    requestedPage
                 });
                 const { newURL } = data;
                 window.location.href = newURL;
             }
-            if (requestedPage === "RecentlyCreated") {
-                const { data } = yield axios.post(`/users/nav`, {
+            if (requestedPage === 'info') {
+                const { data } = yield axios_1.default.post(`/users/nav`, {
                     userURL,
-                    requestedPage,
-                })
-                    .then((response) => {
-                    const { newURL } = response.data;
-                    window.location.href = newURL;
+                    requestedPage
                 });
+                const { newURL } = data;
+                window.location.href = newURL;
+            }
+            if (requestedPage === 'RecentlyCreated') {
+                const { data } = yield axios_1.default.post(`/users/nav`, {
+                    userURL,
+                    requestedPage
+                });
+                const { newURL } = data;
+                window.location.href = newURL;
             }
         }
         catch (error) {
-            console.log("error in handleRenderPage:");
+            console.log('error in handleRenderPage:');
             console.log(error.message);
             // }
         }
@@ -285,12 +284,12 @@ function handlePageChange(ev) {
 function getUsersTasks(userId, currentPage) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { data } = yield axios.get(`tasks/getTasks?ownerId=${userId}`);
+            const { data } = yield axios_1.default.get(`tasks/getTasks?ownerId=${userId}`);
             const currentUsersTasks = data;
             renderTasks(currentUsersTasks, currentPage);
         }
         catch (error) {
-            console.log("error in getUsersTasks:");
+            console.log('error in getUsersTasks:');
             console.log(error.message);
             // }
         }
@@ -299,12 +298,12 @@ function getUsersTasks(userId, currentPage) {
 function renderTasks(currentUsersTasks, currentPage) {
     return __awaiter(this, void 0, void 0, function* () {
         sortTasksByDate(currentUsersTasks);
-        let html = "";
-        let formHtml = "";
+        let html = '';
+        let formHtml = '';
         try {
-            if (currentPage === "Home") {
-                const tasksRoot = document.querySelector("[data-box-root]");
-                const tasksCount = document.querySelector("[data-task-count]");
+            if (currentPage === 'Home') {
+                const tasksRoot = document.querySelector('[data-box-root]');
+                const tasksCount = document.querySelector('[data-task-count]');
                 currentUsersTasks.forEach((task) => {
                     html += `
     <div class="box ${task.urgency}">
@@ -327,14 +326,15 @@ function renderTasks(currentUsersTasks, currentPage) {
                 tasksRoot.innerHTML = html;
                 return;
             }
-            if (currentPage === "RecentlyCreated") {
-                const counterRoot = document.querySelector("[data-counter]");
+            if (currentPage === 'RecentlyCreated') {
+                const counterRoot = document.querySelector('[data-counter]');
                 counterRoot.innerHTML = currentUsersTasks.length;
-                const tasksRoot = document.querySelector("[data-box-root]");
-                const nextRoot = document.querySelector("[data-next-root]");
+                const tasksRoot = document.querySelector('[data-box-root]');
+                const nextRoot = document.querySelector('[data-next-root]');
                 currentUsersTasks.forEach((task) => {
                     if (task.description.length > 20) {
-                        task.descriptionShorted = task.description.substring(0, 15) + "...";
+                        task.descriptionShorted =
+                            task.description.substring(0, 15) + '...';
                     }
                     else {
                         task.descriptionShorted = task.description;
@@ -453,13 +453,15 @@ function addGlobalEventListener(type, selector, callback, options, parent = docu
 function sortTasksByDate(tasks) {
     tasks.forEach((task) => {
         const year = new Date(task.date).getFullYear();
-        const month = ("0" + (new Date(task.date).getMonth() + 1)).slice(-2);
-        const day = ("0" + (new Date(task.date).getDate() + 1)).slice(-2);
+        const month = ('0' + (new Date(task.date).getMonth() + 1)).slice(-2);
+        const day = ('0' + (new Date(task.date).getDate() + 1)).slice(-2);
         const stringDate = `${year}-${month}-${day}`;
         task.year = year;
         task.month = month;
         task.day = day;
-        task.date = new Date(task.date).toLocaleDateString().replace(/\//g, "-");
+        task.date = new Date(task.date)
+            .toLocaleDateString()
+            .replace(/\//g, '-');
         task.date = stringDate;
     });
     tasks.sort((a, b) => a.day - b.day);
@@ -501,19 +503,19 @@ function handleNewTask(ev) {
             (urgency = urgency.value),
             (location = location.value),
             (date = date.value),
-            yield axios
-                .post("/tasks/add-new-task", {
+            yield axios_1.default
+                .post('/tasks/add-new-task', {
                 color,
                 title,
                 description,
                 urgency,
                 location,
                 date,
-                userId,
+                userId
             })
                 .then((response) => {
                 const { currentUsersTasks } = response.data;
-                renderTasks(currentUsersTasks, "RecentlyCreated");
+                renderTasks(currentUsersTasks, 'RecentlyCreated');
             });
     });
 }
@@ -527,9 +529,9 @@ function handleTaskUpdate(ev) {
         const location = ev.target.elements.location.value;
         const date = ev.target.elements.date.value;
         const taskId = ev.target.elements.submit.dataset.id;
-        const userId = ev.target.baseURI.split("=")[1];
+        const userId = ev.target.baseURI.split('=')[1];
         try {
-            const { data } = yield axios.patch("/tasks/updated-task", {
+            const { data } = yield axios_1.default.patch('/tasks/updated-task', {
                 _id: taskId,
                 ownerId: userId,
                 color,
@@ -537,14 +539,14 @@ function handleTaskUpdate(ev) {
                 urgency,
                 description,
                 location,
-                date,
+                date
             });
             const { currentUsersTasks } = data;
-            renderTasks(currentUsersTasks, "RecentlyCreated");
+            renderTasks(currentUsersTasks, 'RecentlyCreated');
             closeTaskModal();
         }
         catch (error) {
-            console.log("error in handleTaskUpdate");
+            console.log('error in handleTaskUpdate');
             console.log({ error: error.message });
         }
     });
@@ -552,19 +554,19 @@ function handleTaskUpdate(ev) {
 function handleTaskCheck(ev) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const timeChecked = new Date().toLocaleDateString().replace(/\//g, "-");
+            const timeChecked = new Date().toLocaleDateString().replace(/\//g, '-');
             const taskId = ev.target.dataset.check;
             const userId = ev.target.baseURI.slice(-24);
-            const { data } = yield axios.patch("/tasks/check-task", {
+            const { data } = yield axios_1.default.patch('/tasks/check-task', {
                 _id: taskId,
                 ownerId: userId,
-                timeChecked,
+                timeChecked
             });
             const { currentUsersTasks } = data;
-            renderTasks(currentUsersTasks, "RecentlyCreated");
+            renderTasks(currentUsersTasks, 'RecentlyCreated');
         }
         catch (error) {
-            console.log("error in handleTaskCheck");
+            console.log('error in handleTaskCheck');
             console.log({ error: error.message });
         }
     });
@@ -574,14 +576,14 @@ function handleTaskDelete(ev) {
         const taskId = ev.target.dataset.delete;
         const userURL = ev.target.baseURI;
         try {
-            const { data } = yield axios.delete("/tasks/delete-task", {
-                data: { taskId, userURL },
+            const { data } = yield axios_1.default.delete('/tasks/delete-task', {
+                data: { taskId, userURL }
             });
             const { currentUsersTasks, currentPage } = data;
             renderTasks(currentUsersTasks, currentPage);
         }
         catch (error) {
-            console.log("error in handleTaskDelete");
+            console.log('error in handleTaskDelete');
             console.log({ error: error.message });
         }
     });
@@ -589,7 +591,7 @@ function handleTaskDelete(ev) {
 function handleColor(ev) {
     return __awaiter(this, void 0, void 0, function* () {
         const newColor = ev.target.value;
-        const formField = document.querySelector("#landing__task-next");
+        const formField = document.querySelector('#landing__task-next');
         formField.style.backgroundColor = newColor;
     });
 }
@@ -598,28 +600,28 @@ function openTaskModal(modal) {
     return __awaiter(this, void 0, void 0, function* () {
         if (modal == null)
             return;
-        modal.classList.add("active");
-        overlay.classList.add("active");
+        modal.classList.add('active');
+        overlay.classList.add('active');
     });
 }
 function closeTaskModal() {
-    const modal = document.querySelector(".taskModal");
+    const modal = document.querySelector('.taskModal');
     if (modal == null)
         return;
-    modal.classList.remove("active");
-    overlay.classList.remove("active");
+    modal.classList.remove('active');
+    overlay.classList.remove('active');
 }
 function renderTaskModal(ev) {
     return __awaiter(this, void 0, void 0, function* () {
         const taskId = ev.target.dataset.id;
-        const modal = document.querySelector(".taskModal");
+        const modal = document.querySelector('.taskModal');
         // const overlay = document.querySelector("[data-taskModal-overlay]");
-        let html = "";
+        let html = '';
         try {
-            const { data } = yield axios.post("/tasks/task", { taskId: taskId });
+            const { data } = yield axios_1.default.post('/tasks/task', { taskId: taskId });
             const currentTask = data;
             if (!currentTask)
-                throw new Error("no task in the modal");
+                throw new Error('no task in the modal');
             currentTask.date = currentTask.date.slice(0, 10);
             html += `
 <div class="taskModal-header">

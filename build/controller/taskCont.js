@@ -23,7 +23,13 @@ exports.getUsersTasks = getUsersTasks;
 const addNewTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { color, title, description, urgency, location, date, userId } = req.body;
-        if (userId && color && title && description && urgency && location && date) {
+        if (userId &&
+            color &&
+            title &&
+            description &&
+            urgency &&
+            location &&
+            date) {
             const newTask = new taskModel_1.default({
                 color: color,
                 title: title,
@@ -34,7 +40,9 @@ const addNewTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 ownerId: userId
             });
             yield newTask.save();
-            res.send({ currentUsersTasks: yield taskModel_1.default.find({ ownerId: userId }) });
+            res.send({
+                currentUsersTasks: yield taskModel_1.default.find({ ownerId: userId })
+            });
         }
     }
     catch (error) {
@@ -72,7 +80,6 @@ const checkTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if ((taskCheck === null || taskCheck === void 0 ? void 0 : taskCheck.checked) === true) {
             yield taskModel_1.default.updateOne({ _id: _id, ownerId: ownerId }, { timeChecked: timeChecked, checked: false });
             const currentUsersTasks = yield taskModel_1.default.find({ ownerId: ownerId });
-            console.log(currentUsersTasks);
             res.send({ currentUsersTasks });
             return;
         }
@@ -117,7 +124,10 @@ exports.getTask = getTask;
 const getUrgencies = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.query;
     const lowUrgency = yield taskModel_1.default.find({ ownerId: userId, urgency: 'low' });
-    const mediumUrgency = yield taskModel_1.default.find({ ownerId: userId, urgency: 'medium' });
+    const mediumUrgency = yield taskModel_1.default.find({
+        ownerId: userId,
+        urgency: 'medium'
+    });
     const highUrgency = yield taskModel_1.default.find({ ownerId: userId, urgency: 'high' });
     res.send({ lowUrgency, mediumUrgency, highUrgency });
 });
