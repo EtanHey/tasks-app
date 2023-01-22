@@ -6,8 +6,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "tsc": "tsc",
-        "start": "node dist/server.js",
-        "postinstall": "npm run tsc"
+        "start": "tsc && npm i && nodemon dist/server.js"
     },
     "keywords": [],
     "author": "",
