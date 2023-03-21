@@ -87,7 +87,6 @@ export const renderUser = async (req, res) => {
 
 export const renderPage = async (req, res) => {
     const { userURL, requestedPage } = req.body;
-
     const appURL = userURL.split('/')[2];
     const userId = userURL.slice(-24);
     const currentUser = await user.find({ _id: userId });
